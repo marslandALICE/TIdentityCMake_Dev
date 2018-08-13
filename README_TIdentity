@@ -1,0 +1,80 @@
+How to Run TIdentity:
+
+1) Download TIdentity module
+   git clone
+
+2) Set TIdentity enviroment by adding the following line into your ~/.bashrc
+   export TIdentityDIR=/Users/marsland/Desktop/TIdentityCMake
+
+3) Compile TIdentity code
+   cd $TIdentityDIR
+   ./cmakeTIdentity.sh
+   * executables are created in $TIdentityDIR/bin
+
+4) Run the code for both options
+
+   a) Running separate (1 or -1) or sum (0) of charges
+   $TIdentityDIR/bin/testIdentity_Sign   <dataTree_path>   <$lineShapes_path>   <sign[0,1.-1]>
+   E.g.
+      inputFiles=/home/marsland/Desktop/tidenTestFiles
+      $TIdentityDIR/bin/testIdentity_Sign  $inputFiles/inputFiles_root5/DataTree_Sign.root $inputFiles/inputFiles_root5/LineShapes_Sign.root 0
+
+   b) Running particles and anti-particles simultaneously
+      inputFiles=/home/marsland/Desktop/tidenTestFiles
+      $TIdentityDIR/bin/testIdentity_NetParticles   $inputFiles/inputFiles_root5/DataTree_Net.root   $inputFiles/inputFiles_root5/LineShapes_Net.root
+
+   c) Running particles and anti-particles simultaneously
+      inputFiles=/home/marsland/Desktop/tidenTestFiles
+      $TIdentityDIR/bin/testIdentity_3D   $inputFiles/inputFiles_root5/DataTree_3D.root   $inputFiles/inputFiles_root5/LineShapes_3D.root
+
+   d) Running particles and anti-particles simultaneously with ALICE data
+
+      data=/lustre/nyx/alice/users/marsland/pFluct/files/analysis/Data/PbPb/Real/RUN1/PHD/Systematics_cRows_80_16EtaBin_mombin20MeV/SubSamples/cent_0.0/SubSample_cent0.00_ss2.root
+      line=/lustre/nyx/alice/users/marsland/pFluct/files/analysis/Data/PbPb/Real/RUN1/PHD/Systematics_cRows_80_16EtaBin_mombin20MeV/ParamTrees/FitResults_piS0.7_kaS0.5_prS0.5_pikaprKauto.root
+
+      inputFiles=/home/marsland/Desktop/tidenTestFiles
+      data=$inputFiles/inputALICE/SubSample_cent0.00_ss2.root
+      line=$inputFiles/inputALICE/FitResults_piS0.7_kaS0.5_prS0.5_pikaprKauto.root
+
+      # ./testIden                              $dataTree $lineShapes $fSubsample  $fCent $fpDown  $fpUp $fEtaDown $fEtaUp $fSystematic
+        $TIdentityDIR/bin/identity_2D_ALICE $data     $line         1          0      0.6     1.5    -0.8      0.8         0
+
+   e) third moment analysis
+       inputFiles=/home/marsland/Desktop/tidenTestFiles
+       data=$inputFiles/inputALICE/SubSample_cent0.00_ss2.root
+       line=$inputFiles/inputALICE/FitResults_piS0.7_kaS0.5_prS0.5_pikaprKauto.root
+
+       # ./testIden                              $dataTree $lineShapes $fSubsample  $fCent $fpDown  $fpUp $fEtaDown $fEtaUp
+       $TIdentityDIR/bin/identity_3D_ALICE        $data     $line         1          0      0.6     1.5    -0.8      0.8
+
+
+**************************************************************************************
+**************************************************************************************
+**************************************************************************************
+
+Further instructions about the input files
+
+Input tree structure:
+
+  --> Name of the tree must be given:
+      TString treeIdentity = "tracks";
+
+  --> 4 branches are internally fixed:
+      ULong64_t gid  // uniquie event index
+      Float dEdx     // identity variable
+      UInt_t cutBit  // variable for the track selection
+      Int_t sign     // charge of the particles
+
+  --> Furher track information such as momentum, rapidity etc can be defined
+      Double_t fTreeVariablesArray[6];                         // 4 default and + 2 extra branch
+      const Int_t nBranches = 2;                               // number of extra branches
+      TString branchNames[nBranches]={"momentum","rapidity"};  // names of the extra branches
+
+Input LineShapes:
+
+  --> objects are stored in a TClonesArray:
+      TString lookUpCloneArrayName = "funcLineShapesCArr";
+
+  --> Naming of the lineshape of a given particle and a given phase space bin
+      particle_<particle index>_bin_<phase space bin in addition to default branches>
+      E.g. particle_2_bin_2 --> particle_<pion>_bin_<sign=1>
