@@ -555,6 +555,7 @@ void TIdentity2D::GetBins(const Int_t nExtraBins, Double_t *bins)
     bins[1] = fMyBin[1];
     bins[2] = fMyBin[2];
     bins[3] = fSign;
+    bins[4] = fMyDeDx;
   }
 }
 

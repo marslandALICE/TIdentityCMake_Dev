@@ -38,10 +38,10 @@ using namespace std;
 Int_t numAllEvents;
 Int_t numAllCutEvents;
 
-TF1 *funProton, *funKaon, *funPion;
+TF1 *funProton, *funBackground, *funAProton;
 
 Double_t evtNumber;
-Double_t WK_sum, WP_sum, WPi_sum, WMult_sum;
+Double_t WK_sum, WP_sum, WAP_sum, WMult_sum;
 Int_t multEv;
 
 vector<int> sumMult;
@@ -49,42 +49,42 @@ vector<int> sumMult;
 vector<double> W2P_sum_vec;
 
 vector<double> W3P_sum_vec;
-vector<double> W3Pi_sum_vec;
+vector<double> W3AP_sum_vec;
 vector<double> W3K_sum_vec;
 
 vector<double> W2K_sum_vec;
-vector<double> W2Pi_sum_vec;
+vector<double> W2AP_sum_vec;
 vector<double> WPK_sum_vec;
-vector<double> WPPi_sum_vec;
-vector<double> WPiK_sum_vec;
-vector<double> WPiPrK_sum_vec;
+vector<double> WPAP_sum_vec;
+vector<double> WAPK_sum_vec;
+vector<double> WAPPrK_sum_vec;
 
-vector<double> WPr2Pi_sum_vec;
+vector<double> WPr2AP_sum_vec;
 vector<double> WPr2K_sum_vec;
-vector<double> WPi2K_sum_vec;
+vector<double> WAP2K_sum_vec;
 
-vector<double> WPi2Pr_sum_vec;
+vector<double> WAP2Pr_sum_vec;
 vector<double> WK2Pr_sum_vec;
-vector<double> WK2Pi_sum_vec;
+vector<double> WK2AP_sum_vec;
 
-Double_t recP2_av, recPi2_av, recK2_av, recPPi_av, recPK_av, recPiK_av;
-Double_t wP_P, wK_P, wPi_P, wP_P2, wK_P2, wPi_P2, wP_P3, wK_P3, wPi_P3, wP_K, wK_K, wPi_K, wP_K2, wK_K2, wPi_K2;
-Double_t wP_K3, wK_K3, wPi_K3, wP_Pi, wK_Pi, wPi_Pi, wP_Pi2, wK_Pi2, wPi_Pi2, wP_Pi3, wK_Pi3, wPi_Pi3;
+Double_t recP2_av, recAP2_av, recK2_av, recPAP_av, recPK_av, recAPK_av;
+Double_t wP_P, wK_P, wAP_P, wP_P2, wK_P2, wAP_P2, wP_P3, wK_P3, wAP_P3, wP_K, wK_K, wAP_K, wP_K2, wK_K2, wAP_K2;
+Double_t wP_K3, wK_K3, wAP_K3, wP_AP, wK_AP, wAP_AP, wP_AP2, wK_AP2, wAP_AP2, wP_AP3, wK_AP3, wAP_AP3;
 
 ///mixed
-Double_t wPK_P, wPPi_P, wPiK_P, wPK_K, wPPi_K, wPiK_K, wPK_Pi, wPPi_Pi, wPiK_Pi, wP2Pi_P, wP2Pi_Pi, wP2Pi_K, wPi2P_P, wPi2P_Pi;
-Double_t wPi2P_K, wP2K_P, wP2K_Pi, wP2K_K, wK2P_P, wK2P_Pi, wK2P_K, wPi2K_P, wPi2K_Pi, wPi2K_K, wK2Pi_P, wK2Pi_Pi, wK2Pi_K, wPiPrK_Pr, wPiPrK_K, wPiPrK_Pi;
+Double_t wPK_P, wPAP_P, wAPK_P, wPK_K, wPAP_K, wAPK_K, wPK_AP, wPAP_AP, wAPK_AP, wP2AP_P, wP2AP_AP, wP2AP_K, wAP2P_P, wAP2P_AP;
+Double_t wAP2P_K, wP2K_P, wP2K_AP, wP2K_K, wK2P_P, wK2P_AP, wK2P_K, wAP2K_P, wAP2K_AP, wAP2K_K, wK2AP_P, wK2AP_AP, wK2AP_K, wAPPrK_Pr, wAPPrK_K, wAPPrK_AP;
 //
-TF1 *funP_P = NULL,    *funK_P = NULL,     *funPi_P = NULL,    *funP_P2 = NULL,   *funK_P2 = NULL,    *funPi_P2 = NULL,  *funP_P3 = NULL,   *funK_P3 = NULL,   *funPi_P3 = NULL;
-TF1 *funP_K = NULL,    *funK_K = NULL,     *funPi_K = NULL,    *funP_K2 = NULL,   *funK_K2 = NULL,    *funPi_K2 = NULL,  *funP_K3 = NULL,   *funK_K3 = NULL,   *funPi_K3 = NULL;
-TF1 *funP_Pi = NULL,   *funK_Pi = NULL,    *funPi_Pi = NULL,   *funP_Pi2 = NULL,  *funK_Pi2 = NULL,   *funPi_Pi2 = NULL, *funP_Pi3 = NULL,  *funK_Pi3 = NULL,  *funPi_Pi3 = NULL;
-TF1 *funPK_P = NULL,   *funPPi_P = NULL,   *funPiK_P = NULL,   *funPK_K = NULL,   *funPPi_K = NULL,   *funPiK_K = NULL,  *funPK_Pi = NULL,  *funPPi_Pi = NULL, *funPiK_Pi = NULL;
-TF1 *funP2Pi_P = NULL, *funP2Pi_Pi = NULL, *funP2Pi_K = NULL,  *funPi2P_P = NULL, *funPi2P_Pi = NULL, *funPi2P_K = NULL, *funP2K_P = NULL,  *funP2K_Pi = NULL, *funP2K_K = NULL;
-TF1 *funK2P_P = NULL,  *funK2P_Pi = NULL,  *funK2P_K = NULL,   *funPi2K_P = NULL, *funPi2K_Pi = NULL, *funPi2K_K = NULL, *funK2Pi_P = NULL, *funK2Pi_Pi = NULL;
-TF1 *funK2Pi_K = NULL, *funPiPrK_P = NULL, *funPiPrK_K = NULL, *funPiPrK_Pi = NULL;
+TF1 *funP_P = NULL,    *funK_P = NULL,     *funAP_P = NULL,    *funP_P2 = NULL,   *funK_P2 = NULL,    *funAP_P2 = NULL,  *funP_P3 = NULL,   *funK_P3 = NULL,   *funAP_P3 = NULL;
+TF1 *funP_K = NULL,    *funK_K = NULL,     *funAP_K = NULL,    *funP_K2 = NULL,   *funK_K2 = NULL,    *funAP_K2 = NULL,  *funP_K3 = NULL,   *funK_K3 = NULL,   *funAP_K3 = NULL;
+TF1 *funP_AP = NULL,   *funK_AP = NULL,    *funAP_AP = NULL,   *funP_AP2 = NULL,  *funK_AP2 = NULL,   *funAP_AP2 = NULL, *funP_AP3 = NULL,  *funK_AP3 = NULL,  *funAP_AP3 = NULL;
+TF1 *funPK_P = NULL,   *funPAP_P = NULL,   *funAPK_P = NULL,   *funPK_K = NULL,   *funPAP_K = NULL,   *funAPK_K = NULL,  *funPK_AP = NULL,  *funPAP_AP = NULL, *funAPK_AP = NULL;
+TF1 *funP2AP_P = NULL, *funP2AP_AP = NULL, *funP2AP_K = NULL,  *funAP2P_P = NULL, *funAP2P_AP = NULL, *funAP2P_K = NULL, *funP2K_P = NULL,  *funP2K_AP = NULL, *funP2K_K = NULL;
+TF1 *funK2P_P = NULL,  *funK2P_AP = NULL,  *funK2P_K = NULL,   *funAP2K_P = NULL, *funAP2K_AP = NULL, *funAP2K_K = NULL, *funK2AP_P = NULL, *funK2AP_AP = NULL;
+TF1 *funK2AP_K = NULL, *funAPPrK_P = NULL, *funAPPrK_K = NULL, *funAPPrK_AP = NULL;
 ////////////////////////////
 
-Int_t size_size = 3000;
+Int_t size_size = 6000;
 Int_t fMyBin[3];
 
 Float_t wmean[3][3];
@@ -94,7 +94,7 @@ Float_t wmix[3][3];
 
 vector<double> WPM_sum_vec;
 vector<double> WKM_sum_vec;
-vector<double> WPiM_sum_vec;
+vector<double> WAPM_sum_vec;
 
 // =======================================================================================================
 // =======================================================================================================
@@ -108,9 +108,10 @@ const Int_t fnMomBins      = 150;
 const Int_t fnParticleBinsInTree = 8;
 Int_t fMindEdx = -1020;
 Int_t fMaxdEdx =  1020;
+Double_t nSubSample = 30.;
 //
 const Int_t nBinsLineShape = 4080; // 6120
-Int_t fnTestEntries = 0;
+Int_t fTestNtracks = -1;
 Bool_t lookUpTableForLine = kFALSE;
 Int_t lookUpTableLineMode = 0; // 0 for hist and 1 for func
 Int_t   fNthFitIteration = 6;
@@ -135,8 +136,10 @@ TH1D *fhCent   = NULL;
 static TH1D *****hParticles;
 static TF1 *****fParticles;
 TTree *momTree = NULL;
-TH1D *hDedxDebug;
-
+TH1D **hDedxDebug;
+TH1D **fHistWs;
+TH1D **fHistOmegas;
+//
 Char_t  inputfileNameDataTree[255];     //file name of tree
 Char_t  inputfileNameLineShapes[255];   // file name for fit functions
 Int_t   fSubsample=-100;
@@ -163,7 +166,7 @@ Double_t nnorm   = 1.;
 Int_t fEtaBin, fCentBin, fMomBin;
 UInt_t fCutBit;
 TVectorF *fIntegrals;
-TVectorF *fMoments1st,  *fMoments2nd, *fMoments2ndMixed;
+TVectorF *fMoments1st,  *fMoments2nd, *fMoments3rd;
 //
 //
 TString fitFunctionGenGausStr = "[0]*exp(-(TMath::Abs(x-[1])/[2])**[3])*(1+TMath::Erf([4]*(x-[1])/[2]/TMath::Sqrt(2)))";
@@ -179,12 +182,11 @@ Double_t fSkewArr[fnEtaBins][fnCentBins][fnMomBins][fnParticleBinsInTree];
 Double_t fKurtosisArr[fnEtaBins][fnCentBins][fnMomBins][fnParticleBinsInTree];
 
 Int_t wrongCount = 0;
-Float_t meanKaon[fnEtaBins][fnCentBins][fnMomBins];
+Float_t meanBackground[fnEtaBins][fnCentBins][fnMomBins];
 Float_t meanProton[fnEtaBins][fnCentBins][fnMomBins];
-Float_t meanPion[fnEtaBins][fnCentBins][fnMomBins];
+Float_t meanAntiProton[fnEtaBins][fnCentBins][fnMomBins];
 Float_t meanElectron[fnEtaBins][fnCentBins][fnMomBins];
 Int_t fUsedBins[fnEtaBins][fnCentBins][fnMomBins];
-
 
 enum momentType
 {
@@ -197,6 +199,15 @@ enum momentType
   kBKa=6,
   kBPr=7,
 };
+
+enum parType
+{
+  kPR=0,
+  kAP=1,
+  kBG=2,
+};
+
+
 enum trackCutBit
 {
   kCRows60=0,
@@ -217,7 +228,6 @@ enum trackCutBit
   kClusterRequirementITS=15,
   kNewITSCut=16,
 };
-
 
 Double_t fitFunctionGenGaus(Double_t *x, Double_t *par)
 {
@@ -244,6 +254,22 @@ void InitializeObjects()
   fhEta   = new TH1D("fhEta" ,"Eta Bins"       ,fnEtaBins ,fEtaRangeDown, fEtaRangeUp );
   fhPtot  = new TH1D("fhPtot","Momentum Bins"  ,fnMomBins ,fMomRangeDown, fMomRangeUp );
   fhCent  = new TH1D("fhCent","Centrality Bins",fnCentBins ,xCentBins );
+  //
+  Int_t min = fhPtot -> FindBin(fpDownInput   + 0.0000001) - 1;
+  Int_t max = fhPtot -> FindBin(fpUpInput     - 0.0000001) - 1;
+  Int_t nbins = max-min;
+  hDedxDebug = new TH1D *[nbins];
+  for (Int_t i = 0; i < nbins; i++) {
+    hDedxDebug[i] = new TH1D(Form("hDedx_%d", i),Form("hDedx_%d", i),nBinsLineShape,fMindEdx,fMaxdEdx);
+  }
+  //
+  fHistWs = new TH1D *[3];
+  fHistOmegas = new TH1D *[3];
+  for (Int_t i = 0; i < 3; i++)
+  {
+    fHistWs[i] = new TH1D(Form("hW_%d", i), Form("hW_%d", i), nBinsLineShape, 0., nBinsLineShape);
+    fHistOmegas[i] = new TH1D(Form("hOmega_%d", i), Form("hOmega_%d", i), 100, 0., 1.);
+  }
   //
   fParticles = new TF1 ****[fnEtaBins];
   for (Int_t i = 0; i<fnEtaBins; i++){
@@ -282,19 +308,18 @@ void InitializeObjects()
   }
   //
   // initialize counters
-  fIntegrals    = new TVectorF(fnParticleBins);
-  fMoments1st   = new TVectorF(fnParticleBins);
-  fMoments2nd   = new TVectorF(fnParticleBins);
-  fMoments2ndMixed   = new TVectorF(fnParticleBins*fnParticleBins);
-
-  for(Int_t i=0;i<fnParticleBins*fnParticleBins; i++){
-    if (i<fnParticleBins) {
-      (*fIntegrals)[i]=0.;
-      (*fMoments1st)[i]=0.;
-      (*fMoments2nd)[i]=0.;
-    }
-    (*fMoments2ndMixed)[i]=0.;
+  fIntegrals    = new TVectorF(3); // 0, 1, 2
+  fMoments1st   = new TVectorF(3); // 0, 1, 2
+  fMoments2nd   = new TVectorF(6); // 00, 11, 22, 01, 02, 1,2
+  fMoments3rd   = new TVectorF(10); // 000, 111, 222, 001, 002, 110, 112, 220, 221, 123
+  //
+  for(Int_t i=0;i<3; i++){
+    (*fIntegrals)[i]=0.;
+    (*fMoments1st)[i]=0.;
   }
+  //
+  for(Int_t i=0;i<6; i++) (*fMoments2nd)[i]=0.;
+  for(Int_t i=0;i<10; i++) (*fMoments3rd)[i]=0.;
   //
   // initialize output tree
   //
@@ -310,7 +335,7 @@ void InitializeObjects()
   momTree -> Branch("fIntegrals",&fIntegrals);
   momTree -> Branch("fMoments1st",&fMoments1st);
   momTree -> Branch("fMoments2nd",&fMoments2nd);
-  momTree -> Branch("fMoments2ndMixed",&fMoments2ndMixed);
+  momTree -> Branch("fMoments3rd",&fMoments3rd);
 
 }
 
@@ -465,10 +490,10 @@ void ReadFitParamsFromTree(TString paramTreeName, Int_t fitIter)
       fSigmaArr[myBin[0]][myBin[1]][myBin[2]][kBKa] = kaSi;
       fSigmaArr[myBin[0]][myBin[1]][myBin[2]][kBPr] = prSi;
 
-      fSkewArr[myBin[0]][myBin[1]][myBin[2]][kBEl] = elSk;
-      fSkewArr[myBin[0]][myBin[1]][myBin[2]][kBPi] = piSk;
-      fSkewArr[myBin[0]][myBin[1]][myBin[2]][kBKa] = kaSk;
-      fSkewArr[myBin[0]][myBin[1]][myBin[2]][kBPr] = prSk;
+      fSkewArr[myBin[0]][myBin[1]][myBin[2]][kBEl] = -elSk;
+      fSkewArr[myBin[0]][myBin[1]][myBin[2]][kBPi] = -piSk;
+      fSkewArr[myBin[0]][myBin[1]][myBin[2]][kBKa] = -kaSk;
+      fSkewArr[myBin[0]][myBin[1]][myBin[2]][kBPr] = -prSk;
 
       fKurtosisArr[myBin[0]][myBin[1]][myBin[2]][kBEl] = elK;
       fKurtosisArr[myBin[0]][myBin[1]][myBin[2]][kBPi] = piK;
@@ -513,6 +538,7 @@ void ReadFitParamsFromTree(TString paramTreeName, Int_t fitIter)
         fParticles[i][j][k][0]->SetNpx(nBinsLineShape);
         //
         hParticles[i][j][k][0] = (TH1D*)fParticles[i][j][k][0]->GetHistogram();
+        hParticles[i][j][k][0]->Scale(1./nSubSample);
         hParticles[i][j][k][0]->SetName(objPtotonName);
         hParticles[i][j][k][0]->SetLineColor(kGreen+2);
         //
@@ -527,6 +553,7 @@ void ReadFitParamsFromTree(TString paramTreeName, Int_t fitIter)
         fParticles[i][j][k][1]->SetNpx(nBinsLineShape);
         //
         hParticles[i][j][k][1] = (TH1D*)fParticles[i][j][k][1]->GetHistogram();
+        hParticles[i][j][k][1]->Scale(1./nSubSample);
         hParticles[i][j][k][1]->SetName(objAntiProtonName);
         hParticles[i][j][k][1]->SetLineColor(kBlue+2);
 
@@ -538,14 +565,16 @@ void ReadFitParamsFromTree(TString paramTreeName, Int_t fitIter)
         fParticles[i][j][k][2]->SetNpx(nBinsLineShape);
         //
         hParticles[i][j][k][2] = (TH1D*)fParticles[i][j][k][2]->GetHistogram();
+        hParticles[i][j][k][2]->Scale(1./nSubSample);
         hParticles[i][j][k][2]->SetName(objOthersName);
         hParticles[i][j][k][2]->SetLineColor(kBlack);
 
-        if (i==etaBinRange[0] && j==centBinRange[0]) {
-          hParticles[i][j][k][0]->Write();
-          hParticles[i][j][k][1]->Write();
-          hParticles[i][j][k][2]->Write();
-        }
+        // if (i==etaBinRange[0] && j==centBinRange[0]) {
+        //   hParticles[i][j][k][0]->Write();
+        //   hParticles[i][j][k][1]->Write();
+        //   hParticles[i][j][k][2]->Write();
+        // }
+
 
       }
     }
@@ -669,8 +698,6 @@ Double_t getValueH(Double_t *xval, Double_t *par)
   Double_t xx = xval[0];
   Int_t pp = (Int_t)par[0];
   //
-  // cout << "  aaaa ->  " <<  xval[0] << "  "  << par[0] << " " << fEtaBin << " " <<  fCentBin << " " << fMomBin << "  " << hParticles[fEtaBin][fCentBin][fMomBin][pp]->GetName() << endl;
-  // if (pp==0) cout << xx << "   -------  " <<  hParticles[fEtaBin][fCentBin][fMomBin][0]->FindBin(xx) << "  " << fEtaBin << " " <<  fCentBin << " " << fMomBin << "  hhhhhh  " << endl;
   //
   Double_t piValue=0., kValue=0., prValue=0.;
   if (lookUpTableLineMode==0) {
@@ -699,7 +726,6 @@ Double_t myIntegral(TF1 *fun)
   for (Int_t i = 1; i < 2 * size_size + 1; i++)
   {
     xx = fMindEdx + step * i;
-    // cout << xx << "  jjj " << step << "  " << i << "  " << fMaxdEdx - fMindEdx << "  " << 2 * size_size << endl;
     sum += fun->Eval(xx);
   }
   return sum * step;
@@ -712,13 +738,13 @@ void initFunctions_M()
   funProton = new TF1("funProton", getValueH, fMindEdx, fMaxdEdx, 1);
   funProton->SetParameter(0, 0);
 
-  if (funPion)  delete funPion;
-  funPion = new TF1("funPion", getValueH, fMindEdx, fMaxdEdx, 1);
-  funPion->SetParameter(0, 1);
+  if (funAProton)  delete funAProton;
+  funAProton = new TF1("funAProton", getValueH, fMindEdx, fMaxdEdx, 1);
+  funAProton->SetParameter(0, 1);
 
-  if (funKaon)  delete funKaon;
-  funKaon = new TF1("funKaon", getValueH, fMindEdx, fMaxdEdx, 1);
-  funKaon->SetParameter(0, 2);
+  if (funBackground)  delete funBackground;
+  funBackground = new TF1("funBackground", getValueH, fMindEdx, fMaxdEdx, 1);
+  funBackground->SetParameter(0, 2);
 
 }
 
@@ -730,9 +756,9 @@ Double_t getFunctions(Double_t *xx, Double_t *par)
   Int_t k = (Int_t)par[2];
   Double_t val[3];
   val[0] = funProton->Eval(x);
-  val[1] = funKaon->Eval(x);
-  val[2] = funPion->Eval(x);
-  // cout << "oooo " << val[0] << "  " << val[1] << "  " << val[2] << endl;
+  val[1] = funBackground->Eval(x);
+  val[2] = funAProton->Eval(x);
+
   Double_t sumVal = val[0] + val[1] + val[2];
   Double_t relVal[3];
   if (sumVal < 1e-15) return 0.;
@@ -753,14 +779,12 @@ Double_t getFunctionsMix(Double_t *xx, Double_t *par)
 
   Double_t val[3];
   val[0] = funProton->Eval(x);
-  val[1] = funKaon->Eval(x);
-  val[2] = funPion->Eval(x);
+  val[1] = funBackground->Eval(x);
+  val[2] = funAProton->Eval(x);
   Double_t sumVal = val[0] + val[1] + val[2];
-  if (sumVal < 1e-15)
-    return 0.;
+  if (sumVal < 1e-15) return 0.;
 
   Double_t myVal[3];
-
   myVal[0] = val[0] * val[1] / sumVal / sumVal;
   myVal[1] = val[0] * val[2] / sumVal / sumVal;
   myVal[2] = val[1] * val[2] / sumVal / sumVal;
@@ -778,14 +802,12 @@ Double_t getFunctionsMix2(Double_t *xx, Double_t *par)
 
   Double_t val[3];
   val[0] = funProton->Eval(x);
-  val[1] = funKaon->Eval(x);
-  val[2] = funPion->Eval(x);
+  val[1] = funBackground->Eval(x);
+  val[2] = funAProton->Eval(x);
   Double_t sumVal = val[0] + val[1] + val[2];
-  if (sumVal < 1e-15)
-    return 0.;
+  if (sumVal < 1e-15) return 0.;
 
   Double_t myVal[3];
-
   myVal[0] = val[m] * val[m] * val[0] / sumVal / sumVal / sumVal;
   myVal[1] = val[m] * val[m] * val[1] / sumVal / sumVal / sumVal;
   myVal[2] = val[m] * val[m] * val[2] / sumVal / sumVal / sumVal;
@@ -799,11 +821,11 @@ Double_t getFunctionsMix3(Double_t *xx, Double_t *par)
   Int_t k = (Int_t)par[0];
   Double_t val[3];
   val[0] = funProton->Eval(x);
-  val[1] = funKaon->Eval(x);
-  val[2] = funPion->Eval(x);
+  val[1] = funBackground->Eval(x);
+  val[2] = funAProton->Eval(x);
   Double_t sumVal = val[0] + val[1] + val[2];
-  if (sumVal < 1e-15)
-    return 0.;
+  if (sumVal < 1e-15) return 0.;
+
   Double_t myVal;
   myVal = val[0] * val[1] * val[2] / sumVal / sumVal / sumVal;
   return myVal * val[k];
@@ -825,118 +847,118 @@ void initFunctions()
   setpars(funP_P, 0, 0, 1);
   funK_P = new TF1("funK_P", getFunctions, fMindEdx, fMaxdEdx, 3);
   setpars(funK_P, 1, 0, 1);
-  funPi_P = new TF1("funPi_P", getFunctions, fMindEdx, fMaxdEdx, 3);
-  setpars(funPi_P, 2, 0, 1);
+  funAP_P = new TF1("funAP_P", getFunctions, fMindEdx, fMaxdEdx, 3);
+  setpars(funAP_P, 2, 0, 1);
   funP_P2 = new TF1("funP_P2", getFunctions, fMindEdx, fMaxdEdx, 3);
   setpars(funP_P2, 0, 0, 2);
   funK_P2 = new TF1("funK_P2", getFunctions, fMindEdx, fMaxdEdx, 3);
   setpars(funK_P2, 1, 0, 2);
-  funPi_P2 = new TF1("funPi_P2", getFunctions, fMindEdx, fMaxdEdx, 3);
-  setpars(funPi_P2, 2, 0, 2);
+  funAP_P2 = new TF1("funAP_P2", getFunctions, fMindEdx, fMaxdEdx, 3);
+  setpars(funAP_P2, 2, 0, 2);
   funP_P3 = new TF1("funP_P3", getFunctions, fMindEdx, fMaxdEdx, 3);
   setpars(funP_P3, 0, 0, 3);
   funK_P3 = new TF1("funK_P3", getFunctions, fMindEdx, fMaxdEdx, 3);
   setpars(funK_P3, 1, 0, 3);
-  funPi_P3 = new TF1("funPi_P3", getFunctions, fMindEdx, fMaxdEdx, 3);
-  setpars(funPi_P3, 2, 0, 3);
+  funAP_P3 = new TF1("funAP_P3", getFunctions, fMindEdx, fMaxdEdx, 3);
+  setpars(funAP_P3, 2, 0, 3);
   funP_K = new TF1("funP_K", getFunctions, fMindEdx, fMaxdEdx, 3);
   setpars(funP_K, 0, 1, 1);
   funK_K = new TF1("funK_K", getFunctions, fMindEdx, fMaxdEdx, 3);
   setpars(funK_K, 1, 1, 1);
-  funPi_K = new TF1("funPi_K", getFunctions, fMindEdx, fMaxdEdx, 3);
-  setpars(funPi_K, 2, 1, 1);
+  funAP_K = new TF1("funAP_K", getFunctions, fMindEdx, fMaxdEdx, 3);
+  setpars(funAP_K, 2, 1, 1);
   funP_K2 = new TF1("funP_K2", getFunctions, fMindEdx, fMaxdEdx, 3);
   setpars(funP_K2, 0, 1, 2);
   funK_K2 = new TF1("funK_K2", getFunctions, fMindEdx, fMaxdEdx, 3);
   setpars(funK_K2, 1, 1, 2);
-  funPi_K2 = new TF1("funPi_K2", getFunctions, fMindEdx, fMaxdEdx, 3);
-  setpars(funPi_K2, 2, 1, 2);
+  funAP_K2 = new TF1("funAP_K2", getFunctions, fMindEdx, fMaxdEdx, 3);
+  setpars(funAP_K2, 2, 1, 2);
   funP_K3 = new TF1("funP_K3", getFunctions, fMindEdx, fMaxdEdx, 3);
   setpars(funP_K3, 0, 1, 3);
   funK_K3 = new TF1("funK_K3", getFunctions, fMindEdx, fMaxdEdx, 3);
   setpars(funK_K3, 1, 1, 3);
-  funPi_K3 = new TF1("funPi_K3", getFunctions, fMindEdx, fMaxdEdx, 3);
-  setpars(funPi_K3, 2, 1, 3);
-  funP_Pi = new TF1("funP_Pi", getFunctions, fMindEdx, fMaxdEdx, 3);
-  setpars(funP_Pi, 0, 2, 1);
-  funK_Pi = new TF1("funK_Pi", getFunctions, fMindEdx, fMaxdEdx, 3);
-  setpars(funK_Pi, 1, 2, 1);
-  funPi_Pi = new TF1("funPi_Pi", getFunctions, fMindEdx, fMaxdEdx, 3);
-  setpars(funPi_Pi, 2, 2, 1);
-  funP_Pi2 = new TF1("funP_Pi2", getFunctions, fMindEdx, fMaxdEdx, 3);
-  setpars(funP_Pi2, 0, 2, 2);
-  funK_Pi2 = new TF1("funK_Pi2", getFunctions, fMindEdx, fMaxdEdx, 3);
-  setpars(funK_Pi2, 1, 2, 2);
-  funPi_Pi2 = new TF1("funPi_Pi2", getFunctions, fMindEdx, fMaxdEdx, 3);
-  setpars(funPi_Pi2, 2, 2, 2);
-  funP_Pi3 = new TF1("funP_Pi3", getFunctions, fMindEdx, fMaxdEdx, 3);
-  setpars(funP_Pi3, 0, 2, 3);
-  funK_Pi3 = new TF1("funK_Pi3", getFunctions, fMindEdx, fMaxdEdx, 3);
-  setpars(funK_Pi3, 1, 2, 3);
-  funPi_Pi3 = new TF1("funPi_Pi3", getFunctions, fMindEdx, fMaxdEdx, 3);
-  setpars(funPi_Pi3, 2, 2, 3);
+  funAP_K3 = new TF1("funAP_K3", getFunctions, fMindEdx, fMaxdEdx, 3);
+  setpars(funAP_K3, 2, 1, 3);
+  funP_AP = new TF1("funP_AP", getFunctions, fMindEdx, fMaxdEdx, 3);
+  setpars(funP_AP, 0, 2, 1);
+  funK_AP = new TF1("funK_AP", getFunctions, fMindEdx, fMaxdEdx, 3);
+  setpars(funK_AP, 1, 2, 1);
+  funAP_AP = new TF1("funAP_AP", getFunctions, fMindEdx, fMaxdEdx, 3);
+  setpars(funAP_AP, 2, 2, 1);
+  funP_AP2 = new TF1("funP_AP2", getFunctions, fMindEdx, fMaxdEdx, 3);
+  setpars(funP_AP2, 0, 2, 2);
+  funK_AP2 = new TF1("funK_AP2", getFunctions, fMindEdx, fMaxdEdx, 3);
+  setpars(funK_AP2, 1, 2, 2);
+  funAP_AP2 = new TF1("funAP_AP2", getFunctions, fMindEdx, fMaxdEdx, 3);
+  setpars(funAP_AP2, 2, 2, 2);
+  funP_AP3 = new TF1("funP_AP3", getFunctions, fMindEdx, fMaxdEdx, 3);
+  setpars(funP_AP3, 0, 2, 3);
+  funK_AP3 = new TF1("funK_AP3", getFunctions, fMindEdx, fMaxdEdx, 3);
+  setpars(funK_AP3, 1, 2, 3);
+  funAP_AP3 = new TF1("funAP_AP3", getFunctions, fMindEdx, fMaxdEdx, 3);
+  setpars(funAP_AP3, 2, 2, 3);
   ////////////////// mixed ones
   funPK_P = new TF1("funPK_P", getFunctionsMix, fMindEdx, fMaxdEdx, 3);
   setpars(funPK_P, 0, 0, -10);
-  funPPi_P = new TF1("funPPi_P", getFunctionsMix, fMindEdx, fMaxdEdx, 3);
-  setpars(funPPi_P, 1, 0, -10);
-  funPiK_P = new TF1("funPiK_P", getFunctionsMix, fMindEdx, fMaxdEdx, 3);
-  setpars(funPiK_P, 2, 0, -10);
+  funPAP_P = new TF1("funPAP_P", getFunctionsMix, fMindEdx, fMaxdEdx, 3);
+  setpars(funPAP_P, 1, 0, -10);
+  funAPK_P = new TF1("funAPK_P", getFunctionsMix, fMindEdx, fMaxdEdx, 3);
+  setpars(funAPK_P, 2, 0, -10);
   funPK_K = new TF1("funPK_K", getFunctionsMix, fMindEdx, fMaxdEdx, 3);
   setpars(funPK_K, 0, 1, -10);
-  funPPi_K = new TF1("funPPi_K", getFunctionsMix, fMindEdx, fMaxdEdx, 3);
-  setpars(funPPi_K, 1, 1, -10);
-  funPiK_K = new TF1("funPiK_K", getFunctionsMix, fMindEdx, fMaxdEdx, 3);
-  setpars(funPiK_K, 2, 1, -10);
-  funPK_Pi = new TF1("funPK_Pi", getFunctionsMix, fMindEdx, fMaxdEdx, 3);
-  setpars(funPK_Pi, 0, 2, -10);
-  funPPi_Pi = new TF1("funPPi_Pi", getFunctionsMix, fMindEdx, fMaxdEdx, 3);
-  setpars(funPPi_Pi, 1, 2, -10);
-  funPiK_Pi = new TF1("funPiK_Pi", getFunctionsMix, fMindEdx, fMaxdEdx, 3);
-  setpars(funPiK_Pi, 2, 2, -10);
+  funPAP_K = new TF1("funPAP_K", getFunctionsMix, fMindEdx, fMaxdEdx, 3);
+  setpars(funPAP_K, 1, 1, -10);
+  funAPK_K = new TF1("funAPK_K", getFunctionsMix, fMindEdx, fMaxdEdx, 3);
+  setpars(funAPK_K, 2, 1, -10);
+  funPK_AP = new TF1("funPK_AP", getFunctionsMix, fMindEdx, fMaxdEdx, 3);
+  setpars(funPK_AP, 0, 2, -10);
+  funPAP_AP = new TF1("funPAP_AP", getFunctionsMix, fMindEdx, fMaxdEdx, 3);
+  setpars(funPAP_AP, 1, 2, -10);
+  funAPK_AP = new TF1("funAPK_AP", getFunctionsMix, fMindEdx, fMaxdEdx, 3);
+  setpars(funAPK_AP, 2, 2, -10);
 
-  funP2Pi_P = new TF1("funP2Pi_P", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
-  setpars(funP2Pi_P, 0, 2, 0);
-  funP2Pi_Pi = new TF1("funP2Pi_Pi", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
-  setpars(funP2Pi_Pi, 0, 2, 2);
-  funP2Pi_K = new TF1("funP2Pi_K", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
-  setpars(funP2Pi_K, 0, 2, 1);
-  funPi2P_P = new TF1("funPi2P_P", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
-  setpars(funPi2P_P, 2, 0, 0);
-  funPi2P_Pi = new TF1("funPi2P_Pi", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
-  setpars(funPi2P_Pi, 2, 0, 2);
-  funPi2P_K = new TF1("funPi2P_K", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
-  setpars(funPi2P_K, 2, 0, 1);
+  funP2AP_P = new TF1("funP2AP_P", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
+  setpars(funP2AP_P, 0, 2, 0);
+  funP2AP_AP = new TF1("funP2AP_AP", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
+  setpars(funP2AP_AP, 0, 2, 2);
+  funP2AP_K = new TF1("funP2AP_K", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
+  setpars(funP2AP_K, 0, 2, 1);
+  funAP2P_P = new TF1("funAP2P_P", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
+  setpars(funAP2P_P, 2, 0, 0);
+  funAP2P_AP = new TF1("funAP2P_AP", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
+  setpars(funAP2P_AP, 2, 0, 2);
+  funAP2P_K = new TF1("funAP2P_K", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
+  setpars(funAP2P_K, 2, 0, 1);
   funP2K_P = new TF1("funP2K_P", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
   setpars(funP2K_P, 0, 1, 0);
-  funP2K_Pi = new TF1("funP2K_Pi", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
-  setpars(funP2K_Pi, 0, 1, 2);
+  funP2K_AP = new TF1("funP2K_AP", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
+  setpars(funP2K_AP, 0, 1, 2);
   funP2K_K = new TF1("funP2K_K", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
   setpars(funP2K_K, 0, 1, 1);
   funK2P_P = new TF1("funK2P_P", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
   setpars(funK2P_P, 1, 0, 0);
-  funK2P_Pi = new TF1("funK2P_Pi", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
-  setpars(funK2P_Pi, 1, 0, 2);
+  funK2P_AP = new TF1("funK2P_AP", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
+  setpars(funK2P_AP, 1, 0, 2);
   funK2P_K = new TF1("funK2P_K", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
   setpars(funK2P_K, 1, 0, 1);
-  funPi2K_P = new TF1("funPi2K_P", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
-  setpars(funPi2K_P, 2, 1, 0);
-  funPi2K_Pi = new TF1("funPi2K_Pi", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
-  setpars(funPi2K_Pi, 2, 1, 2);
-  funPi2K_K = new TF1("funPi2K_K", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
-  setpars(funPi2K_K, 2, 1, 1);
-  funK2Pi_P = new TF1("funK2Pi_P", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
-  setpars(funK2Pi_P, 1, 2, 0);
-  funK2Pi_Pi = new TF1("funK2Pi_Pi", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
-  setpars(funK2Pi_Pi, 1, 2, 2);
-  funK2Pi_K = new TF1("funK2Pi_K", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
-  setpars(funK2Pi_K, 1, 2, 1);
-  funPiPrK_P = new TF1("funPiPrK_P", getFunctionsMix3, fMindEdx, fMaxdEdx, 3);
-  setpars(funPiPrK_P, 0, -100, -100);
-  funPiPrK_K = new TF1("funPiPrK_K", getFunctionsMix3, fMindEdx, fMaxdEdx, 3);
-  setpars(funPiPrK_K, 1, -100, -100);
-  funPiPrK_Pi = new TF1("funPiPrK_Pi", getFunctionsMix3, fMindEdx, fMaxdEdx, 3);
-  setpars(funPiPrK_Pi, 2, -100, -100);
+  funAP2K_P = new TF1("funAP2K_P", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
+  setpars(funAP2K_P, 2, 1, 0);
+  funAP2K_AP = new TF1("funAP2K_AP", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
+  setpars(funAP2K_AP, 2, 1, 2);
+  funAP2K_K = new TF1("funAP2K_K", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
+  setpars(funAP2K_K, 2, 1, 1);
+  funK2AP_P = new TF1("funK2AP_P", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
+  setpars(funK2AP_P, 1, 2, 0);
+  funK2AP_AP = new TF1("funK2AP_AP", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
+  setpars(funK2AP_AP, 1, 2, 2);
+  funK2AP_K = new TF1("funK2AP_K", getFunctionsMix2, fMindEdx, fMaxdEdx, 3);
+  setpars(funK2AP_K, 1, 2, 1);
+  funAPPrK_P = new TF1("funAPPrK_P", getFunctionsMix3, fMindEdx, fMaxdEdx, 3);
+  setpars(funAPPrK_P, 0, -100, -100);
+  funAPPrK_K = new TF1("funAPPrK_K", getFunctionsMix3, fMindEdx, fMaxdEdx, 3);
+  setpars(funAPPrK_K, 1, -100, -100);
+  funAPPrK_AP = new TF1("funAPPrK_AP", getFunctionsMix3, fMindEdx, fMaxdEdx, 3);
+  setpars(funAPPrK_AP, 2, -100, -100);
 }
 
 void calcIntegrals(Float_t *normme)
@@ -954,82 +976,82 @@ void calcIntegrals(Float_t *normme)
 
   wP_P += myIntegral(funP_P) / npNorm;
   wK_P += myIntegral(funK_P) / npNorm;
-  wPi_P += myIntegral(funPi_P) / npNorm;
+  wAP_P += myIntegral(funAP_P) / npNorm;
 
   wP_P2 += myIntegral(funP_P2) / npNorm;
   wK_P2 += myIntegral(funK_P2) / npNorm;
-  wPi_P2 += myIntegral(funPi_P2) / npNorm;
+  wAP_P2 += myIntegral(funAP_P2) / npNorm;
 
   wP_P3 += myIntegral(funP_P3) / npNorm;
   wK_P3 += myIntegral(funK_P3) / npNorm;
-  wPi_P3 += myIntegral(funPi_P3) / npNorm;
+  wAP_P3 += myIntegral(funAP_P3) / npNorm;
 
   wP_K += myIntegral(funP_K) / nkNorm;
   wK_K += myIntegral(funK_K) / nkNorm;
-  wPi_K += myIntegral(funPi_K) / nkNorm;
+  wAP_K += myIntegral(funAP_K) / nkNorm;
 
   wP_K2 += myIntegral(funP_K2) / nkNorm;
   wK_K2 += myIntegral(funK_K2) / nkNorm;
-  wPi_K2 += myIntegral(funPi_K2) / nkNorm;
+  wAP_K2 += myIntegral(funAP_K2) / nkNorm;
 
   wP_K3 += myIntegral(funP_K3) / nkNorm;
   wK_K3 += myIntegral(funK_K3) / nkNorm;
-  wPi_K3 += myIntegral(funPi_K3) / nkNorm;
+  wAP_K3 += myIntegral(funAP_K3) / nkNorm;
 
-  wP_Pi += myIntegral(funP_Pi) / npiNorm;
-  wK_Pi += myIntegral(funK_Pi) / npiNorm;
-  wPi_Pi += myIntegral(funPi_Pi) / npiNorm;
+  wP_AP += myIntegral(funP_AP) / npiNorm;
+  wK_AP += myIntegral(funK_AP) / npiNorm;
+  wAP_AP += myIntegral(funAP_AP) / npiNorm;
 
-  wP_Pi2 += myIntegral(funP_Pi2) / npiNorm;
-  wK_Pi2 += myIntegral(funK_Pi2) / npiNorm;
-  wPi_Pi2 += myIntegral(funPi_Pi2) / npiNorm;
+  wP_AP2 += myIntegral(funP_AP2) / npiNorm;
+  wK_AP2 += myIntegral(funK_AP2) / npiNorm;
+  wAP_AP2 += myIntegral(funAP_AP2) / npiNorm;
 
-  wP_Pi3 += myIntegral(funP_Pi3) / npiNorm;
-  wK_Pi3 += myIntegral(funK_Pi3) / npiNorm;
-  wPi_Pi3 += myIntegral(funPi_Pi3) / npiNorm;
+  wP_AP3 += myIntegral(funP_AP3) / npiNorm;
+  wK_AP3 += myIntegral(funK_AP3) / npiNorm;
+  wAP_AP3 += myIntegral(funAP_AP3) / npiNorm;
 
   ///mixed
   wPK_P += myIntegral(funPK_P) / npNorm;
-  wPPi_P += myIntegral(funPPi_P) / npNorm;
-  wPiK_P += myIntegral(funPiK_P) / npNorm;
+  wPAP_P += myIntegral(funPAP_P) / npNorm;
+  wAPK_P += myIntegral(funAPK_P) / npNorm;
 
   wPK_K += myIntegral(funPK_K) / nkNorm;
-  wPPi_K += myIntegral(funPPi_K) / nkNorm;
-  wPiK_K += myIntegral(funPiK_K) / nkNorm;
+  wPAP_K += myIntegral(funPAP_K) / nkNorm;
+  wAPK_K += myIntegral(funAPK_K) / nkNorm;
 
-  wPK_Pi += myIntegral(funPK_Pi) / npiNorm;
-  wPPi_Pi += myIntegral(funPPi_Pi) / npiNorm;
-  wPiK_Pi += myIntegral(funPiK_Pi) / npiNorm;
+  wPK_AP += myIntegral(funPK_AP) / npiNorm;
+  wPAP_AP += myIntegral(funPAP_AP) / npiNorm;
+  wAPK_AP += myIntegral(funAPK_AP) / npiNorm;
 
   ///////////////////////////////////////////////////////////////////////
 
-  wP2Pi_P += myIntegral(funP2Pi_P) / npNorm;
-  wP2Pi_Pi += myIntegral(funP2Pi_Pi) / npiNorm;
-  wP2Pi_K += myIntegral(funP2Pi_K) / nkNorm;
+  wP2AP_P += myIntegral(funP2AP_P) / npNorm;
+  wP2AP_AP += myIntegral(funP2AP_AP) / npiNorm;
+  wP2AP_K += myIntegral(funP2AP_K) / nkNorm;
 
-  wPi2P_P += myIntegral(funPi2P_P) / npNorm;
-  wPi2P_Pi += myIntegral(funPi2P_Pi) / npiNorm;
-  wPi2P_K += myIntegral(funPi2P_K) / nkNorm;
+  wAP2P_P += myIntegral(funAP2P_P) / npNorm;
+  wAP2P_AP += myIntegral(funAP2P_AP) / npiNorm;
+  wAP2P_K += myIntegral(funAP2P_K) / nkNorm;
 
   wP2K_P += myIntegral(funP2K_P) / npNorm;
-  wP2K_Pi += myIntegral(funP2K_Pi) / npiNorm;
+  wP2K_AP += myIntegral(funP2K_AP) / npiNorm;
   wP2K_K += myIntegral(funP2K_K) / nkNorm;
 
   wK2P_P += myIntegral(funK2P_P) / npNorm;
-  wK2P_Pi += myIntegral(funK2P_Pi) / npiNorm;
+  wK2P_AP += myIntegral(funK2P_AP) / npiNorm;
   wK2P_K += myIntegral(funK2P_K) / nkNorm;
 
-  wPi2K_P += myIntegral(funPi2K_P) / npNorm;
-  wPi2K_Pi += myIntegral(funPi2K_Pi) / npiNorm;
-  wPi2K_K += myIntegral(funPi2K_K) / nkNorm;
+  wAP2K_P += myIntegral(funAP2K_P) / npNorm;
+  wAP2K_AP += myIntegral(funAP2K_AP) / npiNorm;
+  wAP2K_K += myIntegral(funAP2K_K) / nkNorm;
 
-  wK2Pi_P += myIntegral(funK2Pi_P) / npNorm;
-  wK2Pi_Pi += myIntegral(funK2Pi_Pi) / npiNorm;
-  wK2Pi_K += myIntegral(funK2Pi_K) / nkNorm;
+  wK2AP_P += myIntegral(funK2AP_P) / npNorm;
+  wK2AP_AP += myIntegral(funK2AP_AP) / npiNorm;
+  wK2AP_K += myIntegral(funK2AP_K) / nkNorm;
 
-  wPiPrK_Pr += myIntegral(funPiPrK_P) / npNorm;
-  wPiPrK_K += myIntegral(funPiPrK_K) / nkNorm;
-  wPiPrK_Pi += myIntegral(funPiPrK_Pi) / npiNorm;
+  wAPPrK_Pr += myIntegral(funAPPrK_P) / npNorm;
+  wAPPrK_K += myIntegral(funAPPrK_K) / nkNorm;
+  wAPPrK_AP += myIntegral(funAPPrK_AP) / npiNorm;
 }
 
 /////////////////////////////
@@ -1042,36 +1064,36 @@ Float_t Sum(vector<T> &v)
 
 void resetValues()
 {
-  WP_sum = WK_sum = WPi_sum = WMult_sum = 0.;
+  WP_sum = WK_sum = WAP_sum = WMult_sum = 0.;
 }
 
 void addParticles(Float_t mVal, Int_t &count)
 {
   Double_t kValue, prValue, piValue;
-  Double_t WP1, WK1, WPi1;
+  Double_t WP1, WK1, WAP1;
   //
   prValue = funProton->Eval(mVal);
-  kValue  = funKaon->Eval(mVal);
-  piValue = funPion->Eval(mVal);
+  kValue  = funBackground->Eval(mVal);
+  piValue = funAProton->Eval(mVal);
 
   Double_t sumValue = prValue + kValue + piValue;
   if (sumValue == 0)
   {
     cout << "why:   " << mVal << endl;
     wrongCount++;
-    WP1 = WK1 = WPi1 = 0;
+    WP1 = WK1 = WAP1 = 0;
   }
   else
   {
     WP1 = prValue / sumValue;
     WK1 = kValue / sumValue;
-    WPi1 = piValue / sumValue;
+    WAP1 = piValue / sumValue;
 
     count++;
 
     WP_sum += WP1;
     WK_sum += WK1;
-    WPi_sum += WPi1;
+    WAP_sum += WAP1;
     WMult_sum += 1;
   }
 }
@@ -1079,16 +1101,16 @@ void addParticles(Float_t mVal, Int_t &count)
 int identity3Particle()
 {
 
-  cout << "burada " << endl;
+  cout << " identity3Particle.Info: burada " << endl;
   TFile *dataFile = new TFile(fileNameDataTree);
   wrongCount = 0;
   TTree *myTree = (TTree *)dataFile->Get(treeIdentity);
-  cout << "Funtions are inited" << endl;
+  cout << " identity3Particle.Info: Funtions are inited" << endl;
   Int_t prevEvt = -1000;
-  cout << "set address" << endl;
+  cout << " identity3Particle.Info: set address" << endl;
   //
   Int_t fEventNum;  // ULong64_t fEventNum;
-  Double_t fDEdx;    // Float_t fDEdx;
+  Double_t fDEdx;   // Float_t fDEdx;
   UInt_t fCutBit;
   Int_t fSign;
   TBranch *fMyBinBrach = (TBranch *)myTree->FindBranch("myBin");
@@ -1113,9 +1135,9 @@ int identity3Particle()
   for (Int_t i = 0; i < fnEtaBins; i++){
     for (Int_t j = 0; j < fnCentBins; j++){
       for (Int_t k = 0; k < fnMomBins; k++){
-        meanKaon[i][j][k] = 0;
+        meanBackground[i][j][k] = 0;
         meanProton[i][j][k] = 0;
-        meanPion[i][j][k] = 0;
+        meanAntiProton[i][j][k] = 0;
         fUsedBins[i][j][k] = 0;
       }
     }
@@ -1125,11 +1147,11 @@ int identity3Particle()
   numAllCutEvents = 0;
 
   Int_t runEvt = (Int_t)myTree->GetEntries();
-  cout << "total number " << runEvt << endl;
+  cout << " identity3Particle.Info: total number " << runEvt << endl;
   Int_t runStat1 = 0;
   Int_t runStat2 = runEvt;
 
-  cout << "running from " << runStat1 << " to " << runStat2 << endl;
+  cout << " identity3Particle.Info: running from " << runStat1 << " to " << runStat2 << endl;
   Int_t countVeto = 0;
   Int_t prevEvtVeto = -1;
   initFunctions_M();
@@ -1137,13 +1159,13 @@ int identity3Particle()
   myTree->GetEntry(runStat2 - 1);
   Int_t remEvent = fEventNum;
   cout << " ==================================" << endl;
-  cout << " loop over tracks starts " <<endl;
+  cout << " identity3Particle.Info: loop over tracks starts " <<endl;
   timer.Reset(); timer.Start();
   cout << " ==================================" << endl;
   for (Int_t i = runStat1; i < runStat2; i++)
   {
     if (i % 2000000 == 0) cout << "track " << i << " of " << runStat2 - runStat1 << endl;
-    if (i>100000) break;
+    if (i>fTestNtracks && fTestNtracks>0) break;
     myTree->GetEntry(i);
     if ((Int_t)fEventNum == remEvent) continue;
     if ((Int_t)fEventNum != prevEvtVeto && prevEvtVeto > 0) countVeto++;
@@ -1157,12 +1179,17 @@ int identity3Particle()
     if( fCentBin != fCentInputBin ) continue;
     if( fMomBin < fpDownBin   || fMomBin > fpUpBin ) continue;
     if( fEtaBin < fEtaDownBin || fEtaBin > fEtaUpBin ) continue;
-
+    //
+    // Fill debug historam
+    if (fEtaBin==fEtaDownBin && fCentBin==fCentInputBin && fMomBin < fpUpBin){
+      hDedxDebug[fMomBin-fpDownBin]->Fill(fDEdx);
+    }
+    //
     fUsedBins[fEtaBin][fCentBin][fMomBin] = 1;
     // cout << " aaaa " << hParticles[fEtaBin][fCentBin][fMomBin][0]->GetMean() << "   " <<  fEtaBin << "  " << fCentBin << "  " << fMomBin << endl;
     if (!meanProton[fEtaBin][fCentBin][fMomBin]) meanProton[fEtaBin][fCentBin][fMomBin] = myIntegral(funProton);
-    if (!meanPion[fEtaBin][fCentBin][fMomBin])   meanPion[fEtaBin][fCentBin][fMomBin]   = myIntegral(funPion);
-    if (!meanKaon[fEtaBin][fCentBin][fMomBin])   meanKaon[fEtaBin][fCentBin][fMomBin]   = myIntegral(funKaon);
+    if (!meanAntiProton[fEtaBin][fCentBin][fMomBin])   meanAntiProton[fEtaBin][fCentBin][fMomBin]   = myIntegral(funAProton);
+    if (!meanBackground[fEtaBin][fCentBin][fMomBin])   meanBackground[fEtaBin][fCentBin][fMomBin]   = myIntegral(funBackground);
 
     numAllEvents += multEv;
 
@@ -1179,30 +1206,30 @@ int identity3Particle()
           sumMult.push_back(count);
 
           W3P_sum_vec.push_back(TMath::Power(WP_sum, 3));
-          W3Pi_sum_vec.push_back(TMath::Power(WPi_sum, 3));
+          W3AP_sum_vec.push_back(TMath::Power(WAP_sum, 3));
           W3K_sum_vec.push_back(TMath::Power(WK_sum, 3));
 
           W2P_sum_vec.push_back(WP_sum * WP_sum);
           W2K_sum_vec.push_back(WK_sum * WK_sum);
-          W2Pi_sum_vec.push_back(WPi_sum * WPi_sum);
+          W2AP_sum_vec.push_back(WAP_sum * WAP_sum);
 
           WPM_sum_vec.push_back(WP_sum);
           WKM_sum_vec.push_back(WK_sum);
-          WPiM_sum_vec.push_back(WPi_sum);
+          WAPM_sum_vec.push_back(WAP_sum);
 
           WPK_sum_vec.push_back(WP_sum * WK_sum);
-          WPPi_sum_vec.push_back(WP_sum * WPi_sum);
-          WPiK_sum_vec.push_back(WPi_sum * WK_sum);
+          WPAP_sum_vec.push_back(WP_sum * WAP_sum);
+          WAPK_sum_vec.push_back(WAP_sum * WK_sum);
 
-          WPiPrK_sum_vec.push_back(WPi_sum * WP_sum * WK_sum);
+          WAPPrK_sum_vec.push_back(WAP_sum * WP_sum * WK_sum);
 
-          WPr2Pi_sum_vec.push_back(TMath::Power(WP_sum, 2) * WPi_sum);
+          WPr2AP_sum_vec.push_back(TMath::Power(WP_sum, 2) * WAP_sum);
           WPr2K_sum_vec.push_back(TMath::Power(WP_sum, 2) * WK_sum);
-          WPi2K_sum_vec.push_back(TMath::Power(WPi_sum, 2) * WK_sum);
+          WAP2K_sum_vec.push_back(TMath::Power(WAP_sum, 2) * WK_sum);
 
-          WPi2Pr_sum_vec.push_back(WPi_sum * WPi_sum * WP_sum);
+          WAP2Pr_sum_vec.push_back(WAP_sum * WAP_sum * WP_sum);
           WK2Pr_sum_vec.push_back(WK_sum * WK_sum * WP_sum);
-          WK2Pi_sum_vec.push_back(WK_sum * WK_sum * WPi_sum);
+          WK2AP_sum_vec.push_back(WK_sum * WK_sum * WAP_sum);
         }
       }
       resetValues();
@@ -1212,12 +1239,28 @@ int identity3Particle()
     }
     prevEvt = fEventNum;
   } //end event
+
+  if (fEtaBin==fEtaDownBin && fCentBin==fCentInputBin && fMomBin < fpUpBin){
+    hDedxDebug[fMomBin-fpDownBin]->Fill(fDEdx);
+  }
+
+  // dump some debug histograms
+  outFile->cd();
+  for (Int_t i=0; i<fpUpBin-fpDownBin-1; i++) {
+    cout << i << "   " << hParticles[fEtaDownBin][fCentInputBin][fpDownBin+i][0]->GetName() << " -->  " <<  fpDownBin+i << "  " << fEtaDownBin << "   " << fCentInputBin << "   " << endl;
+    hDedxDebug[i]->Write();
+    hParticles[fEtaDownBin][fCentInputBin][fpDownBin+i][0]->Write();
+    hParticles[fEtaDownBin][fCentInputBin][fpDownBin+i][1]->Write();
+    hParticles[fEtaDownBin][fCentInputBin][fpDownBin+i][2]->Write();
+  }
+
+
   cout << "====================================" << endl;
   cout << " track loop is over " << endl;
   timer.Stop(); timer.Print();
   cout << "====================================" << endl;
   //
-  Double_t nEvents = countVeto;
+  nEvents = countVeto;
   nEvents = sumMult.size();
   countVeto = sumMult.size();
 
@@ -1233,17 +1276,16 @@ int identity3Particle()
   cout << "mean mult   " << meanMult << endl;
 
   Double_t proton_aver = 0;
-  Double_t kaon_aver = 0;
-  Double_t pion_aver = 0;
+  Double_t background_aver = 0;
+  Double_t antiP_aver = 0;
 
   for (Int_t i = 0; i < fnEtaBins; i++){
     for (Int_t j = 0; j < fnCentBins; j++){
       for (Int_t k = 0; k < fnMomBins; k++){
         if(fUsedBins[i][j][k] != 1) continue;
-        // cout << i << "  " << j << "  " << k << "  " << meanKaon[i][j][k] << "  " << meanProton[i][j][k] << "  " <<  meanPion[i][j][k] << endl;
-        kaon_aver += meanKaon[i][j][k];
+        background_aver += meanBackground[i][j][k];
         proton_aver += meanProton[i][j][k];
-        pion_aver += meanPion[i][j][k];
+        antiP_aver += meanAntiProton[i][j][k];
       }
     }
   }
@@ -1252,13 +1294,13 @@ int identity3Particle()
   cout << "***********" << endl;
   cout << "***********" << endl;
   cout << "mean multiplicities : ONLY TRUE FOR ALL STATISTICS !" << endl;
-  cout << "proton " << proton_aver * corrFactor << endl;
-  cout << "pkaon  " << kaon_aver * corrFactor << endl;
-  cout << "pion   " << pion_aver * corrFactor << endl;
+  cout << "proton       " << proton_aver * corrFactor << endl;
+  cout << "background   " << background_aver * corrFactor << endl;
+  cout << "antiP        " << antiP_aver * corrFactor << endl;
 
   proton_aver *= corrFactor;
-  kaon_aver *= corrFactor;
-  pion_aver *= corrFactor;
+  background_aver *= corrFactor;
+  antiP_aver *= corrFactor;
 
   cout << "***********" << endl;
   cout << "***********" << endl;
@@ -1269,78 +1311,83 @@ int identity3Particle()
 
   Double_t W2P_aver = Sum<double>(W2P_sum_vec) / nEvents;
   Double_t W2K_aver = Sum<double>(W2K_sum_vec) / nEvents;
-  Double_t W2Pi_aver = Sum<double>(W2Pi_sum_vec) / nEvents;
+  Double_t W2AP_aver = Sum<double>(W2AP_sum_vec) / nEvents;
 
   Double_t WPM_aver = Sum<double>(WPM_sum_vec) / nEvents;
   Double_t WKM_aver = Sum<double>(WKM_sum_vec) / nEvents;
-  Double_t WPiM_aver = Sum<double>(WPiM_sum_vec) / nEvents;
+  Double_t WAPM_aver = Sum<double>(WAPM_sum_vec) / nEvents;
 
   Double_t W3P_aver = Sum<double>(W3P_sum_vec) / nEvents;
-  Double_t W3Pi_aver = Sum<double>(W3Pi_sum_vec) / nEvents;
+  Double_t W3AP_aver = Sum<double>(W3AP_sum_vec) / nEvents;
   Double_t W3K_aver = Sum<double>(W3K_sum_vec) / nEvents;
-  Double_t WPiPrK_aver = Sum<double>(WPiPrK_sum_vec) / nEvents;
-  //    Double_t WPi2P_aver     = Sum<double>(WPi2P_sum_vec)/nEvents;
+  Double_t WAPPrK_aver = Sum<double>(WAPPrK_sum_vec) / nEvents;
+  //    Double_t WAP2P_aver     = Sum<double>(WAP2P_sum_vec)/nEvents;
 
-  Double_t WPr2Pi_aver = Sum<double>(WPr2Pi_sum_vec) / nEvents;
+  Double_t WPr2AP_aver = Sum<double>(WPr2AP_sum_vec) / nEvents;
   Double_t WPr2K_aver = Sum<double>(WPr2K_sum_vec) / nEvents;
-  Double_t WPi2K_aver = Sum<double>(WPi2K_sum_vec) / nEvents;
+  Double_t WAP2K_aver = Sum<double>(WAP2K_sum_vec) / nEvents;
 
-  Double_t WPi2Pr_aver = Sum<double>(WPi2Pr_sum_vec) / nEvents;
+  Double_t WAP2Pr_aver = Sum<double>(WAP2Pr_sum_vec) / nEvents;
   Double_t WK2Pr_aver = Sum<double>(WK2Pr_sum_vec) / nEvents;
-  Double_t WK2Pi_aver = Sum<double>(WK2Pi_sum_vec) / nEvents;
+  Double_t WK2AP_aver = Sum<double>(WK2AP_sum_vec) / nEvents;
 
   Double_t WPK_aver = Sum<double>(WPK_sum_vec) / nEvents;
-  Double_t WPPi_aver = Sum<double>(WPPi_sum_vec) / nEvents;
-  Double_t WPiK_aver = Sum<double>(WPiK_sum_vec) / nEvents;
+  Double_t WPAP_aver = Sum<double>(WPAP_sum_vec) / nEvents;
+  Double_t WAPK_aver = Sum<double>(WAPK_sum_vec) / nEvents;
 
   Double_t pr_aver = 0.;  //Sum<int>(P_mult_vec)/nEvents;
   Double_t k_aver = 0.;   ///Sum<int>(K_mult_vec)/nEvents;
-  Double_t pi_aver = 0.;  ///Sum<int>(Pi_mult_vec)/nEvents;
+  Double_t apr_aver = 0.;  ///Sum<int>(AP_mult_vec)/nEvents;
 
   Double_t pr2_aver = 0.; ////Sum<int>(P2_mult_vec)/nEvents;
   Double_t k2_aver = 0.;  ////Sum<int>(K2_mult_vec)/nEvents;
-  Double_t pi2_aver = 0.; ///Sum<int>(Pi2_mult_vec)/nEvents;
+  Double_t pi2_aver = 0.; ///Sum<int>(AP2_mult_vec)/nEvents;
 
-  Double_t prpi_aver = 0.; ///Sum<int>(PPi_mult_vec)/nEvents;
+  Double_t prapr_aver = 0.; ///Sum<int>(PAP_mult_vec)/nEvents;
   Double_t prk_aver = 0.;  ///Sum<int>(PK_mult_vec)/nEvents;
-  Double_t pik_aver = 0.;  ////Sum<int>(PiK_mult_vec)/nEvents;
+  Double_t pik_aver = 0.;  ////Sum<int>(APK_mult_vec)/nEvents;
 
-  cout << "W2P_aver " << W2P_aver << endl;
-  cout << "W2K_aver " << W2K_aver << endl;
-  cout << "W2Pi_aver " << W2Pi_aver << endl;
-  cout << "WPK_aver " << WPK_aver << endl;
-  cout << "WPPi_aver " << WPPi_aver << endl;
-  cout << "W2PiK_aver " << WPiK_aver << endl;
-
-  cout << "mean from identities " << endl;
-  cout << "WPM_aver  " << WPM_aver  << " -> " << proton_aver << endl;
-  cout << "WKM_aver  " << WKM_aver  << " -> " << kaon_aver   << endl;
-  cout << "WPiM_aver " << WPiM_aver << " -> " << pion_aver   <<  endl;
-
+  cout << " =========================== " << endl;
+  cout << " W2P_aver " << W2P_aver << endl;
+  cout << " W2K_aver " << W2K_aver << endl;
+  cout << " W2AP_aver " << W2AP_aver << endl;
+  cout << " WPK_aver " << WPK_aver << endl;
+  cout << " WPAP_aver " << WPAP_aver << endl;
+  cout << " W2APK_aver " << WAPK_aver << endl;
+  cout << " =========================== " << endl;
+  cout << " mean from identities " << endl;
+  cout << " =========================== " << endl;
+  cout << " WPM_aver  " << WPM_aver  << " -> " << proton_aver << endl;
+  cout << " WKM_aver  " << WKM_aver  << " -> " << background_aver   << endl;
+  cout << " WAPM_aver " << WAPM_aver << " -> " << antiP_aver   <<  endl;
+  cout << " =========================== " << endl;
+  (*fMoments1st)[kPR]=WPM_aver;
+  (*fMoments1st)[kAP]=WAPM_aver;
+  (*fMoments1st)[kBG]=WKM_aver;
   /*
-   proton_aver   = WPM_aver;
-   kaon_aver     = WKM_aver;
-   pion_aver     = WPiM_aver;
-   */
-
-  cout << "start to calculate integrals " << endl;
-  wP_P = 0., wK_P = 0., wPi_P = 0., wP_P2 = 0., wK_P2 = 0., wPi_P2 = 0., wP_P3 = 0., wK_P3 = 0., wPi_P3 = 0., wP_K = 0., wK_K = 0., wPi_K = 0., wP_K2 = 0., wK_K2 = 0.;
-  wPi_K2 = 0., wP_K3 = 0., wK_K3 = 0., wPi_K3 = 0., wP_Pi = 0., wK_Pi = 0., wPi_Pi = 0., wP_Pi2 = 0., wK_Pi2 = 0., wPi_Pi2 = 0., wP_Pi3 = 0., wK_Pi3 = 0., wPi_Pi3 = 0.;
+  proton_aver   = WPM_aver;
+  background_aver     = WKM_aver;
+  antiP_aver     = WAPM_aver;
+  */
+  //
+  wP_P = 0., wK_P = 0., wAP_P = 0., wP_P2 = 0., wK_P2 = 0., wAP_P2 = 0., wP_P3 = 0., wK_P3 = 0., wAP_P3 = 0., wP_K = 0., wK_K = 0., wAP_K = 0., wP_K2 = 0., wK_K2 = 0.;
+  wAP_K2 = 0., wP_K3 = 0., wK_K3 = 0., wAP_K3 = 0., wP_AP = 0., wK_AP = 0., wAP_AP = 0., wP_AP2 = 0., wK_AP2 = 0., wAP_AP2 = 0., wP_AP3 = 0., wK_AP3 = 0., wAP_AP3 = 0.;
   ///mixed
-  wPK_P = 0., wPPi_P = 0., wPiK_P = 0., wPK_K = 0., wPPi_K = 0., wPiK_K = 0., wPK_Pi = 0., wPPi_Pi = 0., wPiK_Pi = 0., wP2Pi_P = 0., wP2Pi_Pi = 0., wP2Pi_K = 0.;
-  wPi2P_P = 0., wPi2P_Pi = 0., wPi2P_K = 0., wP2K_P = 0., wP2K_Pi = 0., wP2K_K = 0., wK2P_P = 0., wK2P_Pi = 0., wK2P_K = 0., wPi2K_P = 0., wPi2K_Pi = 0., wPi2K_K = 0.;
-  wK2Pi_P = 0., wK2Pi_Pi = 0., wK2Pi_K = 0., wPiPrK_Pr = 0., wPiPrK_K = 0., wPiPrK_Pi = 0.;
-  Float_t normme[] = {(Float_t)proton_aver, (Float_t)pion_aver, (Float_t)kaon_aver};
+  wPK_P = 0., wPAP_P = 0., wAPK_P = 0., wPK_K = 0., wPAP_K = 0., wAPK_K = 0., wPK_AP = 0., wPAP_AP = 0., wAPK_AP = 0., wP2AP_P = 0., wP2AP_AP = 0., wP2AP_K = 0.;
+  wAP2P_P = 0., wAP2P_AP = 0., wAP2P_K = 0., wP2K_P = 0., wP2K_AP = 0., wP2K_K = 0., wK2P_P = 0., wK2P_AP = 0., wK2P_K = 0., wAP2K_P = 0., wAP2K_AP = 0., wAP2K_K = 0.;
+  wK2AP_P = 0., wK2AP_AP = 0., wK2AP_K = 0., wAPPrK_Pr = 0., wAPPrK_K = 0., wAPPrK_AP = 0.;
+  Float_t normme[] = {(Float_t)proton_aver, (Float_t)antiP_aver, (Float_t)background_aver};
   ///////////
   cout << " ==================================" << endl;
   cout << " main calculation starts " <<endl;
   timer.Reset(); timer.Start();
   cout << " ==================================" << endl;
-  cout << "  initFunctions  " << endl;
+  cout << " initFunctions  " << endl;
   //
   //
   initFunctions();
-  cout << "  calcIntegrals  " << endl;
+  cout << " calcIntegrals  " << endl;
+  cout << " ==================================" << endl;
   for (Int_t i = 0; i < fnEtaBins; i++){
     for (Int_t j = 0; j < fnCentBins; j++){
       for (Int_t k = 0; k < fnMomBins; k++){
@@ -1353,98 +1400,101 @@ int identity3Particle()
     }
   }
   pr_aver = proton_aver;
-  pi_aver = pion_aver;
-  k_aver = kaon_aver;
+  apr_aver = antiP_aver;
+  k_aver = background_aver;
 
-  cout << "test " << wK_P << "  " << wK_K << "  " << wK_Pi << endl;
-  cout << "1 " << W2K_aver << endl;
-  cout << "2 " << pr_aver * (wK_P2 - wK_P * wK_P) << endl;
-  cout << "3 " << pi_aver * (wK_Pi2 - wK_Pi * wK_Pi) << endl;
-  cout << "4 " << k_aver * (wK_K2 - wK_K * wK_K) << endl;
-  //
-  //
+  cout << " ==================================" << endl;
+  cout << " test " << wK_P << "  " << wK_K << "  " << wK_AP << endl;
+  cout << " 1 " << W2K_aver << endl;
+  cout << " 2 " << pr_aver * (wK_P2 - wK_P * wK_P) << endl;
+  cout << " 3 " << apr_aver * (wK_AP2 - wK_AP * wK_AP) << endl;
+  cout << " 4 " << k_aver * (wK_K2 - wK_K * wK_K) << endl;
+  cout << " ==================================" << endl;
+  cout << " ==================================" << endl;
   cout << "  Unfolding      " << endl;
+  cout << " ==================================" << endl;
+  cout << " ==================================" << endl;
   TMatrixD A2(6, 6);
   A2(0, 0) = wP_P * wP_P;
-  A2(0, 1) = wP_Pi * wP_Pi;
+  A2(0, 1) = wP_AP * wP_AP;
   A2(0, 2) = wP_K * wP_K;
-  A2(0, 3) = 2. * wP_P * wP_Pi;
+  A2(0, 3) = 2. * wP_P * wP_AP;
   A2(0, 4) = 2. * wP_P * wP_K;
-  A2(0, 5) = 2. * wP_Pi * wP_K;
+  A2(0, 5) = 2. * wP_AP * wP_K;
 
-  A2(1, 0) = wPi_P * wPi_P;
-  A2(1, 1) = wPi_Pi * wPi_Pi;
-  A2(1, 2) = wPi_K * wPi_K;
-  A2(1, 3) = 2. * wPi_P * wPi_Pi;
-  A2(1, 4) = 2. * wPi_P * wPi_K;
-  A2(1, 5) = 2. * wPi_Pi * wPi_K;
+  A2(1, 0) = wAP_P * wAP_P;
+  A2(1, 1) = wAP_AP * wAP_AP;
+  A2(1, 2) = wAP_K * wAP_K;
+  A2(1, 3) = 2. * wAP_P * wAP_AP;
+  A2(1, 4) = 2. * wAP_P * wAP_K;
+  A2(1, 5) = 2. * wAP_AP * wAP_K;
 
   A2(2, 0) = wK_P * wK_P;
-  A2(2, 1) = wK_Pi * wK_Pi;
+  A2(2, 1) = wK_AP * wK_AP;
   A2(2, 2) = wK_K * wK_K;
-  A2(2, 3) = 2. * wK_P * wK_Pi;
+  A2(2, 3) = 2. * wK_P * wK_AP;
   A2(2, 4) = 2. * wK_P * wK_K;
-  A2(2, 5) = 2. * wK_Pi * wK_K;
+  A2(2, 5) = 2. * wK_AP * wK_K;
 
-  A2(3, 0) = wP_P * wPi_P;
-  A2(3, 1) = wP_Pi * wPi_Pi;
-  A2(3, 2) = wP_K * wPi_K;
-  A2(3, 3) = wP_P * wPi_Pi + wP_Pi * wPi_P;
-  A2(3, 4) = wP_P * wPi_K + wP_K * wPi_P;
-  A2(3, 5) = wP_Pi * wPi_K + wP_K * wPi_Pi;
+  A2(3, 0) = wP_P * wAP_P;
+  A2(3, 1) = wP_AP * wAP_AP;
+  A2(3, 2) = wP_K * wAP_K;
+  A2(3, 3) = wP_P * wAP_AP + wP_AP * wAP_P;
+  A2(3, 4) = wP_P * wAP_K + wP_K * wAP_P;
+  A2(3, 5) = wP_AP * wAP_K + wP_K * wAP_AP;
 
   A2(4, 0) = wP_P * wK_P;
-  A2(4, 1) = wP_Pi * wK_Pi;
+  A2(4, 1) = wP_AP * wK_AP;
   A2(4, 2) = wP_K * wK_K;
-  A2(4, 3) = wP_P * wK_Pi + wP_Pi * wK_P;
+  A2(4, 3) = wP_P * wK_AP + wP_AP * wK_P;
   A2(4, 4) = wP_P * wK_K + wP_K * wK_P;
-  A2(4, 5) = wP_Pi * wK_K + wP_K * wK_Pi;
+  A2(4, 5) = wP_AP * wK_K + wP_K * wK_AP;
 
-  A2(5, 0) = wPi_P * wK_P;
-  A2(5, 1) = wPi_Pi * wK_Pi;
-  A2(5, 2) = wPi_K * wK_K;
-  A2(5, 3) = wPi_P * wK_Pi + wPi_Pi * wK_P;
-  A2(5, 4) = wPi_P * wK_K + wPi_K * wK_P;
-  A2(5, 5) = wPi_Pi * wK_K + wPi_K * wK_Pi;
+  A2(5, 0) = wAP_P * wK_P;
+  A2(5, 1) = wAP_AP * wK_AP;
+  A2(5, 2) = wAP_K * wK_K;
+  A2(5, 3) = wAP_P * wK_AP + wAP_AP * wK_P;
+  A2(5, 4) = wAP_P * wK_K + wAP_K * wK_P;
+  A2(5, 5) = wAP_AP * wK_K + wAP_K * wK_AP;
 
   proton_aver = WPM_aver;
-  kaon_aver = WKM_aver;
-  pion_aver = WPiM_aver;
+  background_aver = WKM_aver;
+  antiP_aver = WAPM_aver;
 
   pr_aver = proton_aver;
-  pi_aver = pion_aver;
-  k_aver = kaon_aver;
+  apr_aver = antiP_aver;
+  k_aver = background_aver;
 
   Double_t B2[6];
   B2[0] = W2P_aver -
           pr_aver * (wP_P2 - wP_P * wP_P) -
-          pi_aver * (wP_Pi2 - wP_Pi * wP_Pi) -
+          apr_aver * (wP_AP2 - wP_AP * wP_AP) -
           k_aver * (wP_K2 - wP_K * wP_K);
 
-  B2[1] = W2Pi_aver -
-          pr_aver * (wPi_P2 - wPi_P * wPi_P) -
-          pi_aver * (wPi_Pi2 - wPi_Pi * wPi_Pi) -
-          k_aver * (wPi_K2 - wPi_K * wPi_K);
+  B2[1] = W2AP_aver -
+          pr_aver * (wAP_P2 - wAP_P * wAP_P) -
+          apr_aver * (wAP_AP2 - wAP_AP * wAP_AP) -
+          k_aver * (wAP_K2 - wAP_K * wAP_K);
 
   B2[2] = W2K_aver -
           pr_aver * (wK_P2 - wK_P * wK_P) -
-          pi_aver * (wK_Pi2 - wK_Pi * wK_Pi) -
+          apr_aver * (wK_AP2 - wK_AP * wK_AP) -
           k_aver * (wK_K2 - wK_K * wK_K);
 
-  B2[3] = WPPi_aver -
-          pr_aver * (wPPi_P - wP_P * wPi_P) -
-          pi_aver * (wPPi_Pi - wP_Pi * wPi_Pi) -
-          k_aver * (wPPi_K - wP_K * wPi_K);
+  B2[3] = WPAP_aver -
+          pr_aver * (wPAP_P - wP_P * wAP_P) -
+          apr_aver * (wPAP_AP - wP_AP * wAP_AP) -
+          k_aver * (wPAP_K - wP_K * wAP_K);
 
   B2[4] = WPK_aver -
           pr_aver * (wPK_P - wP_P * wK_P) -
-          pi_aver * (wPK_Pi - wP_Pi * wK_Pi) -
+          apr_aver * (wPK_AP - wP_AP * wK_AP) -
           k_aver * (wPK_K - wP_K * wK_K);
 
-  B2[5] = WPiK_aver -
-          pr_aver * (wPiK_P - wPi_P * wK_P) -
-          pi_aver * (wPiK_Pi - wPi_Pi * wK_Pi) -
-          k_aver * (wPiK_K - wPi_K * wK_K);
+  B2[5] = WAPK_aver -
+          pr_aver * (wAPK_P - wAP_P * wK_P) -
+          apr_aver * (wAPK_AP - wAP_AP * wK_AP) -
+          k_aver * (wAPK_K - wAP_K * wK_K);
 
   cout << "A2(0,0) " << A2(0, 0) << "  " << B2[0] << endl;
   A2.Print();
@@ -1452,122 +1502,134 @@ int identity3Particle()
   TMatrixD invA2 = A2.Invert();
   //   invA.Print();
   Double_t recP2_av = 0.;
-  Double_t recPi2_av = 0.;
+  Double_t recAP2_av = 0.;
   Double_t recK2_av = 0.;
-  Double_t recPPi_av = 0.;
+  Double_t recPAP_av = 0.;
   Double_t recPK_av = 0.;
-  Double_t recPiK_av = 0.;
+  Double_t recAPK_av = 0.;
 
-  //recP2_av = recPi2_av = recK2_av  = 0.;
-  //recPPi_av = recPK_av = recPiK_av = 0.;
+  //recP2_av = recAP2_av = recK2_av  = 0.;
+  //recPAP_av = recPK_av = recAPK_av = 0.;
   for (Int_t tt = 0; tt < 6; tt++)
   {
-    recP2_av += invA2(0, tt) * B2[tt];
-    recPi2_av += invA2(1, tt) * B2[tt];
-    recK2_av += invA2(2, tt) * B2[tt];
-    //cout<< "kaon test "<<invA2(2,tt)<<"  "<<B2[tt]<<endl;
-    recPPi_av += invA2(3, tt) * B2[tt];
-    recPK_av += invA2(4, tt) * B2[tt];
-    recPiK_av += invA2(5, tt) * B2[tt];
+    recP2_av  += invA2(0, tt) * B2[tt];
+    recAP2_av += invA2(1, tt) * B2[tt];
+    recK2_av  += invA2(2, tt) * B2[tt];
+    //cout<< "background test "<<invA2(2,tt)<<"  "<<B2[tt]<<endl;
+    recPAP_av += invA2(3, tt) * B2[tt];
+    recPK_av  += invA2(4, tt) * B2[tt];
+    recAPK_av += invA2(5, tt) * B2[tt];
   }
 
-  cout << "print second moments " << endl;
-  cout << "pr2  " << recP2_av  << endl;
-  cout << "pi2  " << recPi2_av << endl;
-  cout << "k2   " << recK2_av  << endl;
-  cout << "prpi " << recPPi_av << endl;
-  cout << "prk  " << recPK_av  << endl;
-  cout << "pik  " << recPiK_av << endl;
-
+  cout << " ==================================" << endl;
+  cout << " ==================================" << endl;
+  cout << " print second moments " << endl;
+  cout << " ==================================" << endl;
+  cout << " ==================================" << endl;
+  cout << " pr2    " << recP2_av  << endl;
+  cout << " apr2   " << recAP2_av << endl;
+  cout << " k2     " << recK2_av  << endl;
+  cout << " prapr  " << recPAP_av << endl;
+  cout << " prk    " << recPK_av  << endl;
+  cout << " aprk   " << recAPK_av << endl;
+  cout << " ==================================" << endl;
+  cout << " ==================================" << endl;
+  (*fMoments2nd)[0]=recP2_av;
+  (*fMoments2nd)[1]=recAP2_av;
+  (*fMoments2nd)[2]=recK2_av;
+  (*fMoments2nd)[3]=recPAP_av;
+  (*fMoments2nd)[4]=recPK_av;
+  (*fMoments2nd)[5]=recAPK_av;
+  //
   pr2_aver = recP2_av;
-  pi2_aver = recPi2_av;
+  pi2_aver = recAP2_av;
   k2_aver = recK2_av;
-  prpi_aver = recPPi_av;
+  prapr_aver = recPAP_av;
   prk_aver = recPK_av;
-  pik_aver = recPiK_av;
+  pik_aver = recAPK_av;
 
   TMatrixD A(10, 10);
   TMatrixD BB(10, 9);
 
   wmean[0][0] = wP_P;
-  wmean[0][1] = wP_Pi;
+  wmean[0][1] = wP_AP;
   wmean[0][2] = wP_K;
-  wmean[1][0] = wPi_P;
-  wmean[1][1] = wPi_Pi;
-  wmean[1][2] = wPi_K;
+  wmean[1][0] = wAP_P;
+  wmean[1][1] = wAP_AP;
+  wmean[1][2] = wAP_K;
   wmean[2][0] = wK_P;
-  wmean[2][1] = wK_Pi;
+  wmean[2][1] = wK_AP;
   wmean[2][2] = wK_K;
 
   wmean2[0][0] = wP_P2;
-  wmean2[0][1] = wP_Pi2;
+  wmean2[0][1] = wP_AP2;
   wmean2[0][2] = wP_K2;
 
-  wmean2[1][0] = wPi_P2;
-  wmean2[1][1] = wPi_Pi2;
-  wmean2[1][2] = wPi_K2;
+  wmean2[1][0] = wAP_P2;
+  wmean2[1][1] = wAP_AP2;
+  wmean2[1][2] = wAP_K2;
 
   wmean2[2][0] = wK_P2;
-  wmean2[2][1] = wK_Pi2;
+  wmean2[2][1] = wK_AP2;
   wmean2[2][2] = wK_K2;
 
   wmean3[0][0] = wP_P3;
-  wmean3[0][1] = wP_Pi3;
+  wmean3[0][1] = wP_AP3;
   wmean3[0][2] = wP_K3;
 
-  wmean3[1][0] = wPi_P3;
-  wmean3[1][1] = wPi_Pi3;
-  wmean3[1][2] = wPi_K3;
+  wmean3[1][0] = wAP_P3;
+  wmean3[1][1] = wAP_AP3;
+  wmean3[1][2] = wAP_K3;
 
   wmean3[2][0] = wK_P3;
-  wmean3[2][1] = wK_Pi3;
+  wmean3[2][1] = wK_AP3;
   wmean3[2][2] = wK_K3;
 
-  wmix[0][0] = wPPi_P;
-  wmix[0][1] = wPPi_Pi;
-  wmix[0][2] = wPPi_K;
+  wmix[0][0] = wPAP_P;
+  wmix[0][1] = wPAP_AP;
+  wmix[0][2] = wPAP_K;
 
   wmix[1][0] = wPK_P;
-  wmix[1][1] = wPK_Pi;
+  wmix[1][1] = wPK_AP;
   wmix[1][2] = wPK_K;
 
-  wmix[2][0] = wPiK_P;
-  wmix[2][1] = wPiK_Pi;
-  wmix[2][2] = wPiK_K;
+  wmix[2][0] = wAPK_P;
+  wmix[2][1] = wAPK_AP;
+  wmix[2][2] = wAPK_K;
 
   Float_t wmix2A[3][3];
 
-  wmix2A[0][0] = wP2Pi_P;
-  wmix2A[0][1] = wP2Pi_Pi;
-  wmix2A[0][2] = wP2Pi_K;
+  wmix2A[0][0] = wP2AP_P;
+  wmix2A[0][1] = wP2AP_AP;
+  wmix2A[0][2] = wP2AP_K;
 
   wmix2A[1][0] = wP2K_P;
-  wmix2A[1][1] = wP2K_Pi;
+  wmix2A[1][1] = wP2K_AP;
   wmix2A[1][2] = wP2K_K;
 
-  wmix2A[2][0] = wPi2K_P;
-  wmix2A[2][1] = wPi2K_Pi;
-  wmix2A[2][2] = wPi2K_K;
+  wmix2A[2][0] = wAP2K_P;
+  wmix2A[2][1] = wAP2K_AP;
+  wmix2A[2][2] = wAP2K_K;
 
   Float_t wmix2B[3][3];
 
-  wmix2B[0][0] = wPi2P_P;
-  wmix2B[0][1] = wPi2P_Pi;
-  wmix2B[0][2] = wPi2P_K;
+  wmix2B[0][0] = wAP2P_P;
+  wmix2B[0][1] = wAP2P_AP;
+  wmix2B[0][2] = wAP2P_K;
 
   wmix2B[1][0] = wK2P_P;
-  wmix2B[1][1] = wK2P_Pi;
+  wmix2B[1][1] = wK2P_AP;
   wmix2B[1][2] = wK2P_K;
 
-  wmix2B[2][0] = wK2Pi_P;
-  wmix2B[2][1] = wK2Pi_Pi;
-  wmix2B[2][2] = wK2Pi_K;
+  wmix2B[2][0] = wK2AP_P;
+  wmix2B[2][1] = wK2AP_AP;
+  wmix2B[2][2] = wK2AP_K;
 
-  Float_t wmeanPrPiK[3];
+  Float_t wmeanPrAPK[3];
 
-  wmeanPrPiK[0] = wPiPrK_Pr;
-  wmeanPrPiK[1] = wPiPrK_Pi;
-  wmeanPrPiK[2] = wPiPrK_K;
+  wmeanPrAPK[0] = wAPPrK_Pr;
+  wmeanPrAPK[1] = wAPPrK_AP;
+  wmeanPrAPK[2] = wAPPrK_K;
 
   Int_t npart = 3;
   Int_t nn = 0;
@@ -1667,7 +1729,7 @@ int identity3Particle()
 
   for (Int_t i = 0; i < npart; i++)
   {
-    BB(p, nn) = wmeanPrPiK[i] + 2. * wmean[0][i] * wmean[1][i] * wmean[2][i] - wmix[0][i] * wmean[2][i] - wmix[1][i] * wmean[1][i] - wmix[2][i] * wmean[0][i];
+    BB(p, nn) = wmeanPrAPK[i] + 2. * wmean[0][i] * wmean[1][i] * wmean[2][i] - wmix[0][i] * wmean[2][i] - wmix[1][i] * wmean[1][i] - wmix[2][i] * wmean[0][i];
     nn++;
   }
 
@@ -1778,37 +1840,40 @@ int identity3Particle()
       mm++;
     }
 
-  Double_t B[10] = {W3P_aver, W3Pi_aver, W3K_aver, WPiPrK_aver, WPr2Pi_aver,
-                    WPr2K_aver, WPi2K_aver, WPi2Pr_aver, WK2Pr_aver, WK2Pi_aver};
+  Double_t B[10] = {W3P_aver, W3AP_aver, W3K_aver, WAPPrK_aver, WPr2AP_aver,
+                    WPr2K_aver, WAP2K_aver, WAP2Pr_aver, WK2Pr_aver, WK2AP_aver};
 
   for (Int_t i = 0; i < 10; i++)
   {
     B[i] -= (BB(i, 0) * pr2_aver + BB(i, 1) * pi2_aver +
-             BB(i, 2) * k2_aver + BB(i, 3) * prpi_aver +
+             BB(i, 2) * k2_aver + BB(i, 3) * prapr_aver +
              BB(i, 4) * prk_aver + BB(i, 5) * pik_aver +
-             BB(i, 6) * pr_aver + BB(i, 7) * pi_aver + BB(i, 8) * k_aver);
+             BB(i, 6) * pr_aver + BB(i, 7) * apr_aver + BB(i, 8) * k_aver);
   }
 
-  TString mom3Names[] = {"NP3", "NPi3", "NK3", "Pr2Pi", "Pr2K",
-                         "Pi2K", "Pi2Pr", "K2Pr", "K2Pi", "PiPrK"};
+  TString mom3Names[] = {"P3", "AP3", "K3", "P2AP", "P2K", "AP2K", "AP2P", "K2P", "K2AP", "APPK"};
 
   TMatrixD invA = A.Invert();
   Double_t rec3mom[10] = {0};
-  cout << "print third moments " << endl;
+  cout << " ==================================" << endl;
+  cout << " ==================================" << endl;
+  cout << " print third moments " << endl;
   for (Int_t i = 0; i < 10; i++)
   {
     for (Int_t tt = 0; tt < 10; tt++)
     {
       rec3mom[i] += invA(i, tt) * B[tt];
     }
-    // N^3+3N^2+N --> poisson 3rd moment
-    // (A*A+A)*B
-    cout << mom3Names[i].Data() << "   :  "  << rec3mom[i] << endl;
+    // N^3+3N^2+N, (A*A+A)*B --> poisson 3rd moment
+    cout << " " << mom3Names[i].Data() << "   :  "  << rec3mom[i] << endl;
+    (*fMoments3rd)[i]=rec3mom[i];
   }
-  cout << "====================================" << endl;
+  cout << " ================================== " << endl;
+  cout << " ================================== " << endl;
   cout << " calculation is over " << endl;
   timer.Stop(); timer.Print();
-  cout << "====================================" << endl;
+  cout << " ================================== " << endl;
+  cout << " ================================== " << endl;
 
   //cout<<"rec3mom 0 "<<rec3mom[0]<<endl;
   Double_t skew = rec3mom[0] - 3. * pr2_aver * proton_aver + 2. * TMath::Power(proton_aver, 3);
@@ -1821,19 +1886,22 @@ int identity3Particle()
 
   skew /= (pr2_aver - proton_aver * proton_aver);
   cout << "skew === " << skew << endl;
-
+  momTree->Fill();
+  outFile->cd();
+  momTree -> Write();
+  outFile -> Close();
+  delete outFile;
   return 0;
 }
 
 int main(int argc, char *argv[])
 {
+  cout << "      " << endl;
   cout << "***********************************************" << endl;
   cout << "***********************************************" << endl;
   cout << "******************** IDENTITY METHOD **********" << endl;
   cout << "***********************************************" << endl;
   cout << "***********************************************" << endl;
-  cout << "      " << endl;
-  cout << "      " << endl;
   cout << "      " << endl;
   //
   if(argc == 9)
@@ -1847,7 +1915,7 @@ int main(int argc, char *argv[])
     fEtaDownInput    = atof(argv[7]);
     fEtaUpInput      = atof(argv[8]);
     cout<<" main.Info: read file names from input "<<endl;
-    TString outPutFileNAme = Form("TIMoments_sub%d_cent_%3.2f_mom_%3.2f_%3.2f_eta_%3.2f_%3.2f.root",fSubsample,fCentInput,fpDownInput,fpUpInput,fEtaDownInput,fEtaUpInput);
+    TString outPutFileNAme = Form("TIMoments3D_sub%d_cent_%3.2f_mom_%3.2f_%3.2f_eta_%3.2f_%3.2f.root",fSubsample,fCentInput,fpDownInput,fpUpInput,fEtaDownInput,fEtaUpInput);
     outFile = new TFile(outPutFileNAme,"recreate");
     cout << " main.Info: write output into:    " << outPutFileNAme << endl;
   }

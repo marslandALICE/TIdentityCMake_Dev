@@ -71,6 +71,7 @@ const Int_t fnParticleBins = 8;
 const Int_t fnMomBins      = 150;
 Int_t fMindEdx = -1020;
 Int_t fMaxdEdx =  1020;
+Double_t nSubSample = 30.;
 //
 //
 // Look up table related
@@ -141,6 +142,7 @@ TH1D *fhEta    = NULL;
 TH1D *fhCent   = NULL;
 static TH1D *****hParticles;
 static TF1 *****fParticles;
+TH1D **hDedxDebug;
 TTree *momTree = NULL;
 //
 // members
@@ -179,7 +181,7 @@ int main(int argc, char *argv[])
     fEtaUpInput      = atof(argv[8]);
     fSystematic      = atoi(argv[9]);
     cout<<" main.Info: read file names from input "<<endl;
-    TString outPutFileNAme = Form("TIMoments_sub%d_cent_%3.2f_mom_%3.2f_%3.2f_eta_%3.2f_%3.2f.root"
+    TString outPutFileNAme = Form("TIMoments2D_sub%d_cent_%3.2f_mom_%3.2f_%3.2f_eta_%3.2f_%3.2f.root"
     ,fSubsample,fCentInput,fpDownInput,fpUpInput,fEtaDownInput,fEtaUpInput);
     outFile = new TFile(outPutFileNAme,"recreate");
     cout << " main.Info: write output into:    " << outPutFileNAme << endl;
@@ -233,12 +235,13 @@ int main(int argc, char *argv[])
       cout << " -- bin 0 =  " << fTreeVariablesArray[0];
       cout << " -- bin 1 =  " << fTreeVariablesArray[1];
       cout << " -- bin 2 =  " << fTreeVariablesArray[2];
-      cout << " -- bin 3 =  " << fTreeVariablesArray[3] << endl;
+      cout << " -- bin 3 =  " << fTreeVariablesArray[3];
+      cout << " -- bin 4 =  " << fTreeVariablesArray[4] << endl;
     }
     //
     // Choose which kind of tree input is used
     if (treeIdentity=="fIdenTree"){
-      // Dikkkkaaaaat this is for backward compatibility
+      // Dikkkkaaaaat this is for backward compatibility ???
       fEtaBin  = Int_t(fTreeVariablesArray[0]);
       fCentBin = Int_t(fTreeVariablesArray[1]);
       fMomBin  = Int_t(fTreeVariablesArray[2]);
@@ -258,12 +261,25 @@ int main(int argc, char *argv[])
     if( fCentBin != fCentInputBin ) continue;
     if( fMomBin < momRange[0] || fMomBin > momRange[1] ) continue;
     if( fEtaBin < etaRange[0] || fEtaBin > etaRange[1] ) continue;
+    // Fill debug historam
+    if (fEtaBin==fEtaDownBin && fCentBin==fCentInputBin && fMomBin < fpUpBin && treeIdentity=="fIdenTree" ){
+      hDedxDebug[fMomBin-fpDownBin]->Fill(fTreeVariablesArray[4]);
+    }
     //
     fUsedBins[fEtaBin][fCentBin][fMomBin] = 1;
     iden4 -> AddEntry();
     countEntry++;
     //
   }
+  //
+  // Dump some debug histograms
+  outFile->cd();
+  for (Int_t i=0; i<fpUpBin-fpDownBin-1; i++) {
+    hDedxDebug[i]->Write();
+    for (Int_t j=0; j<fnParticleBins; j++) hParticles[fEtaDownBin][fCentInputBin][fpDownBin+i][j]->Write();
+  }
+  //
+  //
   cout << "main.Info: Total number of tracks processed = " << countEntry << endl;
   iden4 -> Finalize();
   //
@@ -464,6 +480,7 @@ void ReadFitParamsFromTree(TString paramTreeName, Int_t fitIter)
   {
     // myBin[0] --> Eta, myBin[1]--> Centrality, myBin[2]-->Momentum
     treeLookUp -> GetEntry(i);
+    if (sign == 0) continue;
     if (it != fitIter) continue;
     //
     if (sign==1){
@@ -509,10 +526,10 @@ void ReadFitParamsFromTree(TString paramTreeName, Int_t fitIter)
       fSigmaArr[myBin[0]][myBin[1]][myBin[2]][kBKa] = kaSi;
       fSigmaArr[myBin[0]][myBin[1]][myBin[2]][kBPr] = prSi;
 
-      fSkewArr[myBin[0]][myBin[1]][myBin[2]][kBEl] = elSk;
-      fSkewArr[myBin[0]][myBin[1]][myBin[2]][kBPi] = piSk;
-      fSkewArr[myBin[0]][myBin[1]][myBin[2]][kBKa] = kaSk;
-      fSkewArr[myBin[0]][myBin[1]][myBin[2]][kBPr] = prSk;
+      fSkewArr[myBin[0]][myBin[1]][myBin[2]][kBEl] = -elSk;
+      fSkewArr[myBin[0]][myBin[1]][myBin[2]][kBPi] = -piSk;
+      fSkewArr[myBin[0]][myBin[1]][myBin[2]][kBKa] = -kaSk;
+      fSkewArr[myBin[0]][myBin[1]][myBin[2]][kBPr] = -prSk;
 
       fKurtosisArr[myBin[0]][myBin[1]][myBin[2]][kBEl] = elK;
       fKurtosisArr[myBin[0]][myBin[1]][myBin[2]][kBPi] = piK;
@@ -554,10 +571,11 @@ void ReadFitParamsFromTree(TString paramTreeName, Int_t fitIter)
           fParticles[i][j][k][ipart]->SetLineColor(colors[ipart]);
           //
           hParticles[i][j][k][ipart] = (TH1D*)fParticles[i][j][k][ipart]->GetHistogram();
+          hParticles[i][j][k][ipart]->Scale(1./nSubSample);
           hParticles[i][j][k][ipart]->SetName(objName);
           hParticles[i][j][k][ipart]->SetLineColor(colors[ipart]);
           //
-          if (i==etaBinRange[0] && j==centBinRange[0]) hParticles[i][j][k][ipart]->Write();
+          // if (i==etaBinRange[0] && j==centBinRange[0]) hParticles[i][j][k][ipart]->Write();
         }
         //
       }
@@ -571,13 +589,8 @@ Double_t EvalFitValue(Int_t particle, Double_t x)
 
   if (lookUpTableForLine){
     Int_t bin = hParticles[fEtaBin][fCentBin][fMomBin][particle]->FindBin(x);
-    if (lookUpTableLineMode==0){
-      return hParticles[fEtaBin][fCentBin][fMomBin][particle]->GetBinContent(bin);
-    }
-    if (lookUpTableLineMode==1){
-      return fParticles[fEtaBin][fCentBin][fMomBin][particle]->Eval(x);
-    }
-
+    if (lookUpTableLineMode==0) return hParticles[fEtaBin][fCentBin][fMomBin][particle]->GetBinContent(bin);
+    if (lookUpTableLineMode==1) return fParticles[fEtaBin][fCentBin][fMomBin][particle]->Eval(x);
   } else {
     fgengaus -> SetParameter(0,fAmpArr[fEtaBin][fCentBin][fMomBin][particle]);
     fgengaus -> SetParameter(1,fMeanArr[fEtaBin][fCentBin][fMomBin][particle]);
@@ -598,6 +611,14 @@ void InitializeObjects()
   fhEta   = new TH1D("fhEta" ,"Eta Bins"       ,fnEtaBins ,fEtaRangeDown, fEtaRangeUp );
   fhPtot  = new TH1D("fhPtot","Momentum Bins"  ,fnMomBins ,fMomRangeDown, fMomRangeUp );
   fhCent  = new TH1D("fhCent","Centrality Bins",fnCentBins ,xCentBins );
+  //
+  Int_t min = fhPtot -> FindBin(fpDownInput   + 0.0000001) - 1;
+  Int_t max = fhPtot -> FindBin(fpUpInput     - 0.0000001) - 1;
+  Int_t nbins = max-min;
+  hDedxDebug = new TH1D *[nbins];
+  for (Int_t i = 0; i < nbins; i++) {
+    hDedxDebug[i] = new TH1D(Form("hDedx_%d", i),Form("hDedx_%d", i),nBinsLineShape,fMindEdx,fMaxdEdx);
+  }
   //
   fParticles = new TF1 ****[fnEtaBins];
   for (Int_t i = 0; i<fnEtaBins; i++){
