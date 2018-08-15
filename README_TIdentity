@@ -86,6 +86,7 @@ Input LineShapes:
 
       cd /home/marsland/Desktop/gitTIdentity/cmake_dev/TIdentityCMake_Dev
       meld /home/marsland/Desktop/gitTIdentity/cmake_dev/TIdentityCMake_Dev /home/marsland/Desktop/TIdentityCMake_Dev &
+      meld /u/marsland/PHD/macros/TIdentityCMake_Dev /home/marsland/Desktop/gitTIdentity/cmake_dev/TIdentityCMake_Dev &
 
 
 

@@ -108,9 +108,10 @@ const Int_t fnMomBins      = 150;
 const Int_t fnParticleBinsInTree = 8;
 Int_t fMindEdx = -1020;
 Int_t fMaxdEdx =  1020;
-Double_t nSubSample = 30.;
+Double_t nSubSample = 25.;
+Double_t fCentBinCenter = 0.;
 //
-const Int_t nBinsLineShape = 4080; // 6120
+const Int_t nBinsLineShape = 8160; // 6120
 Int_t fTestNtracks = -1;
 Bool_t lookUpTableForLine = kFALSE;
 Int_t lookUpTableLineMode = 0; // 0 for hist and 1 for func
@@ -326,12 +327,13 @@ void InitializeObjects()
   momTree = new TTree("momTree","momTree");
   momTree -> Branch("nEvents",&nEvents);
   momTree -> Branch("nnorm",&nnorm);
+  momTree -> Branch("subsample",&fSubsample);
   momTree -> Branch("pDown",&fpDownInput);
   momTree -> Branch("pUp",&fpUpInput);
   momTree -> Branch("etaDown",&fEtaDownInput);
   momTree -> Branch("etaUp",&fEtaUpInput);
-  momTree -> Branch("cent",&fCentInput);
-  momTree -> Branch("centBin",&fCentInputBin);
+  momTree -> Branch("centBinIndex",&fCentInputBin);
+  momTree -> Branch("centBin",&fCentBinCenter);
   momTree -> Branch("fIntegrals",&fIntegrals);
   momTree -> Branch("fMoments1st",&fMoments1st);
   momTree -> Branch("fMoments2nd",&fMoments2nd);
@@ -538,7 +540,7 @@ void ReadFitParamsFromTree(TString paramTreeName, Int_t fitIter)
         fParticles[i][j][k][0]->SetNpx(nBinsLineShape);
         //
         hParticles[i][j][k][0] = (TH1D*)fParticles[i][j][k][0]->GetHistogram();
-        hParticles[i][j][k][0]->Scale(1./nSubSample);
+        if (fSubsample>0) hParticles[i][j][k][0]->Scale(1./nSubSample);
         hParticles[i][j][k][0]->SetName(objPtotonName);
         hParticles[i][j][k][0]->SetLineColor(kGreen+2);
         //
@@ -553,7 +555,7 @@ void ReadFitParamsFromTree(TString paramTreeName, Int_t fitIter)
         fParticles[i][j][k][1]->SetNpx(nBinsLineShape);
         //
         hParticles[i][j][k][1] = (TH1D*)fParticles[i][j][k][1]->GetHistogram();
-        hParticles[i][j][k][1]->Scale(1./nSubSample);
+        if (fSubsample>0) hParticles[i][j][k][1]->Scale(1./nSubSample);
         hParticles[i][j][k][1]->SetName(objAntiProtonName);
         hParticles[i][j][k][1]->SetLineColor(kBlue+2);
 
@@ -565,7 +567,7 @@ void ReadFitParamsFromTree(TString paramTreeName, Int_t fitIter)
         fParticles[i][j][k][2]->SetNpx(nBinsLineShape);
         //
         hParticles[i][j][k][2] = (TH1D*)fParticles[i][j][k][2]->GetHistogram();
-        hParticles[i][j][k][2]->Scale(1./nSubSample);
+        if (fSubsample>0) hParticles[i][j][k][2]->Scale(1./nSubSample);
         hParticles[i][j][k][2]->SetName(objOthersName);
         hParticles[i][j][k][2]->SetLineColor(kBlack);
 
@@ -1239,19 +1241,16 @@ int identity3Particle()
     }
     prevEvt = fEventNum;
   } //end event
-
-  if (fEtaBin==fEtaDownBin && fCentBin==fCentInputBin && fMomBin < fpUpBin){
-    hDedxDebug[fMomBin-fpDownBin]->Fill(fDEdx);
-  }
-
+  //
   // dump some debug histograms
   outFile->cd();
-  for (Int_t i=0; i<fpUpBin-fpDownBin-1; i++) {
-    cout << i << "   " << hParticles[fEtaDownBin][fCentInputBin][fpDownBin+i][0]->GetName() << " -->  " <<  fpDownBin+i << "  " << fEtaDownBin << "   " << fCentInputBin << "   " << endl;
-    hDedxDebug[i]->Write();
-    hParticles[fEtaDownBin][fCentInputBin][fpDownBin+i][0]->Write();
-    hParticles[fEtaDownBin][fCentInputBin][fpDownBin+i][1]->Write();
-    hParticles[fEtaDownBin][fCentInputBin][fpDownBin+i][2]->Write();
+  if (fSubsample<2){
+    for (Int_t i=0; i<fpUpBin-fpDownBin-1; i++) {
+      hDedxDebug[i]->Write();
+      hParticles[fEtaDownBin][fCentInputBin][fpDownBin+i][0]->Write();
+      hParticles[fEtaDownBin][fCentInputBin][fpDownBin+i][1]->Write();
+      hParticles[fEtaDownBin][fCentInputBin][fpDownBin+i][2]->Write();
+    }
   }
 
 
@@ -1523,15 +1522,23 @@ int identity3Particle()
 
   cout << " ==================================" << endl;
   cout << " ==================================" << endl;
+  cout << " print first moments " << endl;
+  cout << " ==================================" << endl;
+  cout << " ==================================" << endl;
+  cout << " pr  " << WPM_aver   << endl;
+  cout << " apr " << WAPM_aver  << endl;
+  cout << " bg  " << WKM_aver   << endl;
+  cout << " ==================================" << endl;
+  cout << " ==================================" << endl;
   cout << " print second moments " << endl;
   cout << " ==================================" << endl;
   cout << " ==================================" << endl;
-  cout << " pr2    " << recP2_av  << endl;
-  cout << " apr2   " << recAP2_av << endl;
-  cout << " k2     " << recK2_av  << endl;
-  cout << " prapr  " << recPAP_av << endl;
-  cout << " prk    " << recPK_av  << endl;
-  cout << " aprk   " << recAPK_av << endl;
+  cout << " pr2     " << recP2_av  << endl;
+  cout << " apr2    " << recAP2_av << endl;
+  cout << " bg2     " << recK2_av  << endl;
+  cout << " pr_apr  " << recPAP_av << endl;
+  cout << " pr_bg   " << recPK_av  << endl;
+  cout << " apr_bg  " << recAPK_av << endl;
   cout << " ==================================" << endl;
   cout << " ==================================" << endl;
   (*fMoments2nd)[0]=recP2_av;
@@ -1851,7 +1858,8 @@ int identity3Particle()
              BB(i, 6) * pr_aver + BB(i, 7) * apr_aver + BB(i, 8) * k_aver);
   }
 
-  TString mom3Names[] = {"P3", "AP3", "K3", "P2AP", "P2K", "AP2K", "AP2P", "K2P", "K2AP", "APPK"};
+  // TString mom3Names[] = {"P3", "AP3", "K3", "P2AP", "P2K", "AP2K", "AP2P", "K2P", "K2AP", "APPK"};
+  TString mom3Names[] = {"pr3", "apr3", "bg3", "pr2_apr", "pr2_bg", "apr2_bg", "apr2_pr", "bg2_pr", "bg2_apr", "apr_pr_bg"};
 
   TMatrixD invA = A.Invert();
   Double_t rec3mom[10] = {0};
@@ -1933,6 +1941,7 @@ int main(int argc, char *argv[])
   fEtaDownBin     = fhEta  -> FindBin(fEtaDownInput + 0.0000001) - 1;
   fEtaUpBin       = fhEta  -> FindBin(fEtaUpInput   - 0.0000001) - 1;
   fCentInputBin   = fhCent -> FindBin(fCentInput    + 0.0000001) - 1;
+  fCentBinCenter  = fhCent -> GetXaxis()->GetBinCenter(fCentInputBin+1);
   //
   //
   TROOT IdentityMethod("IdentityMethod", "compiled identity method");

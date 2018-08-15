@@ -71,11 +71,11 @@ const Int_t fnParticleBins = 8;
 const Int_t fnMomBins      = 150;
 Int_t fMindEdx = -1020;
 Int_t fMaxdEdx =  1020;
-Double_t nSubSample = 30.;
+Double_t nSubSample = 25.;
 //
 //
 // Look up table related
-const Int_t nBinsLineShape      = 4080;
+const Int_t nBinsLineShape      = 8160;
 Int_t       fnTestEntries       = 0;
 Bool_t      lookUpTableForLine  = kTRUE;
 Int_t       lookUpTableLineMode = 0;     // 0 for TH1D, 1 for TF1
@@ -119,6 +119,7 @@ Int_t fSystematic=-100;
 //
 TString fileNameDataTree = "";
 TString fileNameLineShapes = "";
+Double_t fCentBinCenter = 0.;
 Int_t fCentInputBin = 0;
 Int_t fpDownBin     = 0;
 Int_t fpUpBin       = 0;
@@ -181,8 +182,7 @@ int main(int argc, char *argv[])
     fEtaUpInput      = atof(argv[8]);
     fSystematic      = atoi(argv[9]);
     cout<<" main.Info: read file names from input "<<endl;
-    TString outPutFileNAme = Form("TIMoments2D_sub%d_cent_%3.2f_mom_%3.2f_%3.2f_eta_%3.2f_%3.2f.root"
-    ,fSubsample,fCentInput,fpDownInput,fpUpInput,fEtaDownInput,fEtaUpInput);
+    TString outPutFileNAme = Form("TIMoments2D_sub%d_cent_%3.2f_mom_%3.2f_%3.2f_eta_%3.2f_%3.2f.root",fSubsample,fCentInput,fpDownInput,fpUpInput,fEtaDownInput,fEtaUpInput);
     outFile = new TFile(outPutFileNAme,"recreate");
     cout << " main.Info: write output into:    " << outPutFileNAme << endl;
   }
@@ -200,6 +200,7 @@ int main(int argc, char *argv[])
   fEtaDownBin     = fhEta  -> FindBin(fEtaDownInput + 0.0000001) - 1;
   fEtaUpBin       = fhEta  -> FindBin(fEtaUpInput   - 0.0000001) - 1;
   fCentInputBin   = fhCent -> FindBin(fCentInput    + 0.0000001) - 1;
+  fCentBinCenter  = fhCent -> GetXaxis()->GetBinCenter(fCentInputBin+1);
   Int_t etaRange[2] = {fEtaDownBin,fEtaUpBin};
   Int_t momRange[2] = {fpDownBin,fpUpBin};
   //
@@ -274,9 +275,11 @@ int main(int argc, char *argv[])
   //
   // Dump some debug histograms
   outFile->cd();
-  for (Int_t i=0; i<fpUpBin-fpDownBin-1; i++) {
-    hDedxDebug[i]->Write();
-    for (Int_t j=0; j<fnParticleBins; j++) hParticles[fEtaDownBin][fCentInputBin][fpDownBin+i][j]->Write();
+  if (fSubsample<2){
+    for (Int_t i=0; i<fpUpBin-fpDownBin-1; i++) {
+      hDedxDebug[i]->Write();
+      for (Int_t j=0; j<fnParticleBins; j++) hParticles[fEtaDownBin][fCentInputBin][fpDownBin+i][j]->Write();
+    }
   }
   //
   //
@@ -571,7 +574,7 @@ void ReadFitParamsFromTree(TString paramTreeName, Int_t fitIter)
           fParticles[i][j][k][ipart]->SetLineColor(colors[ipart]);
           //
           hParticles[i][j][k][ipart] = (TH1D*)fParticles[i][j][k][ipart]->GetHistogram();
-          hParticles[i][j][k][ipart]->Scale(1./nSubSample);
+          if (fSubsample>0) hParticles[i][j][k][ipart]->Scale(1./nSubSample);
           hParticles[i][j][k][ipart]->SetName(objName);
           hParticles[i][j][k][ipart]->SetLineColor(colors[ipart]);
           //
@@ -676,12 +679,14 @@ void InitializeObjects()
   momTree = new TTree("momTree","momTree");
   momTree -> Branch("nEvents",&nEvents);
   momTree -> Branch("nnorm",&nnorm);
+  momTree -> Branch("subsample",&fSubsample);
   momTree -> Branch("pDown",&fpDownInput);
   momTree -> Branch("pUp",&fpUpInput);
   momTree -> Branch("etaDown",&fEtaDownInput);
   momTree -> Branch("etaUp",&fEtaUpInput);
   momTree -> Branch("cent",&fCentInput);
-  momTree -> Branch("centBin",&fCentInputBin);
+  momTree -> Branch("centBinIndex",&fCentInputBin);
+  momTree -> Branch("centBin",&fCentBinCenter);
   momTree -> Branch("fIntegrals",&fIntegrals);
   momTree -> Branch("fMoments1st",&fMoments1st);
   momTree -> Branch("fMoments2nd",&fMoments2nd);
